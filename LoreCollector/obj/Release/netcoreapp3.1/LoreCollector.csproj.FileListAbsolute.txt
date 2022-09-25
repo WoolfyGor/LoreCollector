@@ -1,0 +1,16 @@
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.exe
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.deps.json
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.runtimeconfig.json
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.runtimeconfig.dev.json
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.dll
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\bin\Release\netcoreapp3.1\LoreCollector.pdb
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.CustomTextBox.resources
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.Form1.resources
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.Properties.Resources.resources
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.csproj.GenerateResource.cache
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.AssemblyInfoInputs.cache
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.AssemblyInfo.cs
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.csproj.CoreCompileInputs.cache
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.dll
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.pdb
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.genruntimeconfig.cache
