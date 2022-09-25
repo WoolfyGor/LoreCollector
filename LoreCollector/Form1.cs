@@ -20,47 +20,46 @@ namespace LoreCollector
         PrivateFontCollection pfc = new PrivateFontCollection(); //Шрифты
         List<String> loreParsed = new List<string>(); // Список строк лора
         Dictionary<string,string> nickNames = new Dictionary<string,string>();
-        //Блок форматирования текста
-        int lastY = 150;
-        int spacing = 5;
-        int charactersTonewLine = 60;
-        string folderName = "PlayerHeads";
-        string nicknamesFile = "nickname.txt";
-        string prevLine = "";
+        int lastY = 100; // Координаты последнего контрола (окна с текстом) внутри Panel
+        int spacing = 5; // Отступ
+        float charactersTonewLine = 60f; // Символов в строке текстового окна
+        string folderName = "PlayerHeads"; //Имя папки с головами
+        string nicknamesFile = "nickname.txt"; //Текстовый документ с именами@Никами персонажей
+        string prevLine =""; //Предыдущая строка
         public Form1()
         {
-            InitializeComponent();
-            AllocConsole();
-            nickNames.Clear();
-            LoadPictures(folderName);
+            InitializeComponent(); 
+            AllocConsole();//Подключение консоли для дебаггинга
+            nickNames.Clear(); // Очищение спииска ников
+            LoadPictures(folderName); // Загрузка картинок голов из папки
 
         }
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
+
         private void LoadPictures(string folderName)
         {
             if (!Directory.Exists(folderName))
             {
-                Directory.CreateDirectory(folderName);
+                Directory.CreateDirectory(folderName); // Если папки с никами нет - создается 
             }
             nickNames.Clear();
-            var fstream = new StreamReader(nicknamesFile);
+            var fstream = new StreamReader(nicknamesFile); 
             while (!fstream.EndOfStream)
             {
                 string s = fstream.ReadLine();
                 var nick = s.Substring(0, s.IndexOf("@"));
                 var charName = s.Substring(s.IndexOf("@")+1);
-                nickNames.Add(nick, charName);
-                textBox1.Text += charName;
+                nickNames.Add(nick, charName); // В список ников добавляется пара ник-имя персонажа
             }
             fstream.Close();
             var files = Directory.GetFiles(folderName, "*.*")
-                .ToList();
-            imageList1.Images.Add("default", Properties.Resources.steave_head);
+                .ToList(); // Создает список всех файлов из указанной дериктории с любым именем/расширением
+            imageList1.Images.Add("default", Properties.Resources.steave_head); // Добавление заглушки для отсутствующих скинов
             foreach (var file in files) 
             {
-                Image myImage = Image.FromFile(file);
+                Image myImage = Image.FromFile(file); 
                 imageList1.Images.Add(file,new Bitmap(myImage));// Добавление картинок в image лист для дальнешйего подставления 
             }
 
@@ -68,315 +67,264 @@ namespace LoreCollector
         
         public void InitCustomLabelFont(Control cc)
         {
-            pfc.AddFontFile("D:\\minecraft.ttf");
+            pfc.AddFontFile("D:\\minecraft.ttf"); // Подключение шрифта кастомного
             cc.Font = new Font(pfc.Families[0], 8, FontStyle.Regular);    // Заменяет шрифты у передаваемого контрола
         }
         
-        private void button1_Click(object sender, EventArgs e)
+        private void chooseLog_Click(object sender, EventArgs e)
         {
             var fileContent = string.Empty;
             var filePath = string.Empty;
-            lastY = 100;
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            lastY = 100; // Очищение значения к исходному
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) // Сложная мешанина из интернета с считыванием файла с интернета
             {
                 openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (openFileDialog.ShowDialog() == DialogResult.OK) // Если в окне выбора файла нажали ОК, то
                 {
-                    //Get the path of specified file
                     filePath = openFileDialog.FileName;
-
-                    //Read the contents of the file into a stream
                     var fileStream = openFileDialog.OpenFile();
-
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        fileContent = reader.ReadToEnd();
+                        fileContent = reader.ReadToEnd(); //Файл считывается в переменную string
                     }
-                    //fileContent  = Encoding.GetEncoding(1251).GetString(Encoding.GetEncoding(1252).GetBytes(fileContent));
                     string[] arrayString = fileContent.Split(new string[] { Environment.NewLine },
-        StringSplitOptions.None);
-                    
-                    var coolLore = CutToLogs(arrayString);
-                    loreParsed = coolLore;
-                    FillThePanel(loreParsed);
+        StringSplitOptions.None); //Файл разбивается в string массив по новым строкам
 
+                    loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
+                    FillThePanel(loreParsed); // Заполнение панелек с текстом, используя массив строк без мусора
                 }
 
             }
         }
        private List<string> CutToLogs(string[] fullContent)
         {
-            int StartLine = 0;
+            int StartLine = 0; // Строка, с которой начинается поиск сообщений
             List<string> coolLore = new List<string>();
             for(int i = 0; i < fullContent.Length; i++)
             {
                 if (!fullContent[i].Contains("Done")) // первое сообщение перед заходом на сервер
                     continue;
                 StartLine = i;
-
             }
 
             for(int i = StartLine+1; i < fullContent.Length; i++)
             {
                 var line = fullContent[i];
-                if(line.Contains("[Not"))
+                if(line.Contains("[Not")) //Поиск серверного сообщения [Not Secure], им помечаются сообщения игроков.
                 {
-                    int pos = line.IndexOf("re]") +3; // Оффсет на конец сообщения [CHAT]
+                    int pos = line.IndexOf("re]") +3; // Оффсет на конец сообщения [Not Secure]
 
                     if (line.Contains("<") || line.Contains("*")) // СОобщения с ником или звездочкой в дейсвтии
                     {
-                        if (!line.Substring(pos).Contains("> ("))
+                        if (!line.Substring(pos).Contains("> (")) // Обходи сообщений оффтопа
                         {
-                            if (!line.Substring(pos).Contains("> 9"))
+                            if (!line.Substring(pos).Contains("> 9")) // И ещё
                             {
-                                var needles = new string[] { "<", "#", ">" };
-                                foreach (var needle in needles)
-                                {
-                                    line = line.Replace(needle, String.Empty);
+                                if (!line.Substring(pos).Contains("> )")) // И ещё
+                                { 
+                                    var needles = new string[] { "<", "#", ">" }; // Массив символов, которые нужно убрать из конечного сообщения
+                                    foreach (var needle in needles)
+                                    {
+                                        line = line.Replace(needle, String.Empty); // Если на строке происходит совпадение с одной из needlе (элемент массива), то заменяется на пустоту.
+                                    }
+                                    line = line.Substring(pos); // Обрезается сообщение к Никнейму
+                                    if (line.Trim().Split()[0] != "*") //Если сообщение пишется черезе /me
+                                    {
+                                        int Place = line.Trim().IndexOf(" ");
+                                        line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : "); // Заменяется символ пробела и ставится : для сообщения в итогового
+                                    }
+                                    coolLore.Add(line); // Добавление отформатированной строки к общему массиву строк
                                 }
-                                line = line.Substring(pos);
-                                if (line.Trim().Split()[0] != "*")
-                                {
-
-                                    int Place = line.Trim().IndexOf(" ");
-                                    line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : ");
-                                    textBox1.Text = line;
-                                }
-                                coolLore.Add(line);
                             }
                         }
                     }
                 }
             }
-            return coolLore;
+            return coolLore; //Возвращение крутых строк 
             
         }
        
         private void FillThePanel(List<String> completedLore)
         {
-            
-            int width = 700;
-            mainPanel.AutoScroll = true;
-
+            int width = mainPanel.Width; // Присаивание значения ширины панели для текстовых сообщений.
+           
             foreach (var line in completedLore)
             {
-                SetupDialogBubble(width, line);
+                SetupDialogBubble(width, line); // Для каждой строки крутого лора (отформатированные строки) создается текстовое окно
             }
 
-            mainPanel.Height = lastY + spacing*3;
-            this.AutoScroll = true;
+            mainPanel.Height = lastY + spacing*3; // Выставляется ширина панели по Y последнего сообщения + оффсет
+            this.AutoScroll = true; // Разрашает прокрутку основной формы
         }
         private void SetupDialogBubble(int width,string line)
         {
 
-            Panel newPanel = SetupPanel(width, lastY, spacing);
-            Label newLabel = SetupLabel(width, line, charactersTonewLine, newPanel);
-            SetupImage(newPanel, newLabel,line);
-            prevLine = line;
-            mainPanel.Controls.Add(newPanel);
+            Panel newPanel = SetupPanel(width, lastY, spacing); // Создается панель для содержания в себе элементов
+            Label newLabel = SetupLabel(width, line, charactersTonewLine, newPanel); // Создается текстовый лейбл внутри панели
+            SetupImage(newPanel, newLabel,line); //Устанавливается картинка в панель
+            prevLine = line; // Сохраняем предыдущую строку для проверки оффсета
+            mainPanel.Controls.Add(newPanel); //Добавляем созданную панель внутрь основной панели
         }
         private Panel SetupPanel( int width, int lastY,int spacing)
         {
-            Panel newPanel = new Panel();
-            newPanel.BackColor = Color.Transparent;
-            newPanel.BorderStyle = BorderStyle.None;
-            newPanel.Width = width-50;
-            newPanel.BorderStyle = BorderStyle.None;
-            newPanel.BackgroundImage = Properties.Resources.plate1;
-            newPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            Panel newPanel = new Panel(); // Создается пустая панель
+            newPanel.BackColor = Color.Transparent; //Цвет заднего фона - прозрачный
+            newPanel.BorderStyle = BorderStyle.None; // Без рамки
+            newPanel.Width = width-50; //Ширина меньше ширины панели, в которой будет располагаться
+            newPanel.BackgroundImage = Properties.Resources.plate1; // Берем картинку из ресурсов проекта и ставим на задний фон панели
+            newPanel.BackgroundImageLayout = ImageLayout.Stretch; // Выставляем растягивание картинки в панели.
           
-            if (prevLine.Length > 60)
+            if (prevLine.Length > charactersTonewLine) //Проверка кол-ва символов в строке для корректного отступа
             {
-                float multiplier = (prevLine.Length / 60f);
-                textBox3.Text += multiplier*spacing + " | ";
-
-                    newPanel.Location = new Point(20, lastY + (int)multiplier* spacing);
-                
+                float multiplier = (prevLine.Length / charactersTonewLine); // Получаем множитель размера текста (сколько строк занимает с остатком)
+                newPanel.Location = new Point(20, lastY + (int)multiplier* spacing); // Выставляем координаты панели с учетом корректного отступа
                 Console.WriteLine($"Panel location.Y is { newPanel.Location.Y} at spacing having {spacing*multiplier} having LastY {lastY}");
-
             }
             else
             {
-               
-                textBox3.Text += spacing + " | ";
-                newPanel.Location = new Point(20, lastY + spacing);
-                Console.WriteLine($"Panel location.Y is { newPanel.Location.Y} at spacing having {spacing} having LastY {lastY}");
-
-                
+                newPanel.Location = new Point(20, lastY + spacing); // Иначе, если сообщение короткое, используем обычный отступ
+                Console.WriteLine($"Panel location.Y is { newPanel.Location.Y} at spacing having {spacing} having LastY {lastY}"); 
             }
             
-            return newPanel;
+            return newPanel; // Возвращаем панель
         }
         private PictureBox SetupImage(Panel newPanel, Label newLine,string line)
         {
-            PictureBox newPicture = new PictureBox();
-            newPicture.Size = new Size(25, 25);
-            newPicture.SizeMode =PictureBoxSizeMode.Zoom;
-            newPicture.Location = new Point(15, (int)(newLine.Height / 1.5));
-            newPanel.Controls.Add(newPicture);
+            PictureBox newPicture = new PictureBox(); //Создается картинка
+            newPicture.Size = new Size(25, 25); //Выставляется размер картинки
+            newPicture.SizeMode =PictureBoxSizeMode.Zoom; // Выставляется режим масштабирования картинки
+            newPicture.Location = new Point(15, (int)(newLine.Height / 1.5)); //Выставляется позиция картинки относительно текстового поля
+            newPanel.Controls.Add(newPicture); //На панель добавляется картинка
             string name;
+
             if (line.Trim().Substring(0,3).Contains("*")) {
-                name= line.Trim().Substring(2,line.Trim().IndexOf(" ",3)-2);
+                name= line.Trim().Substring(2,line.Trim().IndexOf(" ",3)-2); //Если сообщение пишется через /me (имеет звездочку вначале), то отрабатывает обрезание ника по одной последовательности
             }
             else
-                 name = line.Trim().Substring(0, line.IndexOf(" "));
+                 name = line.Trim().Substring(0, line.IndexOf(" ")); // Если сообщение обычное, то по другой 
 
-           
-            newPicture = SetHeadPicture(newPicture, name);
-            return newPicture;
+            newPicture = SetHeadPicture(newPicture, name); // Присваивается изображение внутрь контрола с картинкой по имени
+            return newPicture; //Возвращаем картинку
         }
-        private Label SetupLabel (int width,string line, int charactersToNewLine,Panel newPanel)
+        private Label SetupLabel (int width,string line, float charactersToNewLine,Panel newPanel)
         {
-            Label newLine = new Label();
-            
-            var lineWithSpaces = SplitToLower(line, charactersToNewLine);
-            newLine.Text = lineWithSpaces;
-            newLine.Width = width;
+            Label newLine = new Label(); // Создаем текстовый лейбл для сообщения
+            var lineWithSpaces = SplitToLower(line, charactersToNewLine); // Разбиваем сообщение на многострчоное, используя исходную строку и кол-во символов до новой строки
+            newLine.Text = lineWithSpaces; // Выставояем лейблу текст с переносами.
+            newLine.Width = width; //Выставляем лейблу ширину
 
-            
-   
             SizeF MessageSize = newLine.CreateGraphics()
                             .MeasureString(newLine.Text,
                                             newLine.Font,
                                             newLine.Width,
-                                            new StringFormat(0));
+                                            new StringFormat(0)); //Получаем то, сколько строк займет строка имея нужный шрифт, ширину контрола, размер шрифта и тп.
 
-            if (line.Length > 60)
+            if (line.Length > 60) // Если ширина переданной В ФУНКЦИЮ строки больше 60, то значит он многострочный
             {
                 float multiplier = (float)(1 +(((line.Length / 60) + 1.5)/10));
-                newLine.Height = (int)(MessageSize.Height * multiplier);
-              
+                newLine.Height = (int)(MessageSize.Height * multiplier); //Считаем мультипликатор и выставляем ширину строки
             }
             else
-            {
-                newLine.Height = (int)MessageSize.Height;
-            }
+                newLine.Height = (int)MessageSize.Height; // Иначе Ставим просто высоту строки
+            
 
+            newPanel.Height = newLine.Height * 2; // Выставляем ширину ПАНЕЛИ для текста в два раза больше самого текста
 
-            newPanel.Height = newLine.Height * 2;
-
-            newPanel.MinimumSize = new Size(500, 50);
+            newPanel.MinimumSize = new Size(500, 50);// Задаем минимальную ширину панели, чтобы маленькие не схлопывались
             Console.WriteLine($"Having Height at {newPanel.Height}");
-            newLine.BorderStyle = BorderStyle.None;
-            newLine.BackColor = Color.Transparent;
-            newLine.ForeColor = Color.White;
-            newLine.Location = new Point(50, (int)(newPanel.Height*0.3));
-            lastY += spacing*3 + newPanel.Height;
+            newLine.BorderStyle = BorderStyle.None; // Убираем рамки у строки
+            newLine.BackColor = Color.Transparent; // Ставим прозрачный фон строке
+            newLine.ForeColor = Color.White; // Ставим цвет шрифта строке
+            newLine.Location = new Point(50, (int)(newPanel.Height*0.3)); //Позиционируем строку внутри панели
+            lastY += spacing*3 + newPanel.Height; // Увеличиваем координату последней текстовой панели на соответствующее значение
+             
+            InitCustomLabelFont(newLine); // Меняем шрифт строке
+            newPanel.Controls.Add(newLine); // Добавляем строку в Панель текстового окна
 
-            InitCustomLabelFont(newLine);
-            newPanel.Controls.Add(newLine);
-
-            return newLine;
+            return newLine; //Возвращаем панельку
         }
         private PictureBox SetHeadPicture(PictureBox pictureBox, String name)
         {
-            if (nickNames.ContainsKey(name) || nickNames.ContainsValue(name)) {
-                string charName = "";
-                var u = imageList1.Images.Count;
-                nickNames.TryGetValue(name, out charName);
-                try
+            if (nickNames.ContainsKey(name) || nickNames.ContainsValue(name)) { //Если список имен@Ников содержит в себе имя, переданное в функцию (имя на строке), то
+                string charName;
+                nickNames.TryGetValue(name, out charName); //Пытаемся найти значение в массиве имен@Ников
+                try // Если nickNames существует, то назначается картинка по имени или по нику
                 {
                     if (charName != null)
                         pictureBox.Image = imageList1.Images[imageList1.Images.IndexOfKey(folderName + "\\" + charName + ".png")];
                     else
                         pictureBox.Image = imageList1.Images[imageList1.Images.IndexOfKey(folderName + "\\" + name + ".png")];
-
                 }
 
-                catch
+                catch //Иначе, если возникает какой-то exception, ставитс яголова стива
                 {
                     pictureBox.Image = Properties.Resources.steave_head;
                 }
             } 
             else
-            {
-                pictureBox.Image = Properties.Resources.steave_head;
-            }
-            if (name  == "Root_Of_Tree")
-            {
+                pictureBox.Image = Properties.Resources.steave_head; //Также, если ника нет в списке имен@ников, ставится стив
+            
+            if (name  == "Root_Of_Tree") //Костыль на ник Рут, потому что он не читался из файла корректно
                 pictureBox.Image = imageList1.Images[imageList1.Images.IndexOfKey(folderName + "\\" + "Рут" + ".png")];
 
-            }
-
-
-            pictureBox1.Image = pictureBox.Image;
-            return pictureBox;
+            return pictureBox; // Возвращаем картинку
         }
-        private string SplitToLower(string str, int n)
+        private string SplitToLower(string str, float charToNewLine)
         {
-            //return Regex.Replace(str, ".{" + n + "}(?!$)", "$0-\n");
-            
-
             for(int i = 1; i < str.Length; i++)
             {
-                var currentChar = str[i];
-                if (i % n!= 0)
+                if (i % charToNewLine != 0) // Получаем остаток от деления на кол-во символов до новой строки, тем самым начиная проверку только на определенных символах. Можно зарефракторить цикл, чтобы не перебирать все символы а только 50е, но пока лень
                     continue;
-                var tempo = str.ToCharArray();
-                var tempStr = new List<string>();
+
+                var tempo = str.ToCharArray(); // Разбиваем всю строку на массив
+                var tempStr = new List<string>(); // А также создаем временный список символов
                 foreach(var chara in tempo)
                 {
-                    tempStr.Add(chara.ToString());
-                }
-                 //tempStr = str.Split();
+                    tempStr.Add(chara.ToString());// Каждый символ добавляем в список
+                 }
 
-                for (int m = i;m>0 ; m--) {
+                for (int m = i;m>0 ; m--) { // Начинаем перебирать список
 
-                    if (tempStr[m] != " ")
+                    if (tempStr[m] != " ") // Если символ не пробел, то пропускаем его и идём к предыдущему
                         continue;
 
-                    tempStr[m] = "\r";
-                    str = string.Join("", tempStr);
+                    tempStr[m] = "\r"; // Заменяем символ-пробел на перенос строки
+                    str = string.Join("", tempStr); // Склеиваем список символов в единую строку
                     break;
                 }
             }
-            return str;
+            return str; // Возвращаем её
         }
 
-        private void SaveAsImage_Click(object sender, EventArgs e)
+        private void SaveAsImage_Click(object sender, EventArgs e) //Кнопка сохранения картинки
         {
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf";
-            sf.ShowDialog();
-            var path = sf.FileName;
-            if (path == "")
+            SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
+            sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
+
+               
+            sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
+            var path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
+            if (path == "") //Если путь пустой - прекращаем работу функции
                 return;
 
-            int width = mainPanel.Size.Width;
-            int height = mainPanel.Size.Height;
-
-            Bitmap bm = new Bitmap(width, height);
-            mainPanel.DrawToBitmap(bm, new Rectangle(0, 0, width, height));
-
-            bm.Save(path, ImageFormat.Bmp);
-
+            int width = mainPanel.Size.Width; //Задаем ширину основной панели в ширину будущей картинки
+            int height = mainPanel.Size.Height; //Задаем ширину основной панели в ширину будущей картинки
+            Bitmap bm = new Bitmap(width, height); //Создаем новый битмап заданных размеров
+            MessageBox.Show("Идёт создание картинки, ожидайте", "В процессе..."); //Окно-предупреждение
+            mainPanel.DrawToBitmap(bm, new Rectangle(0, 0, width, height)); //Перерисовываем панель со всеми фонами как Битмап в нашу переменную.
+            bm.Save(path, ImageFormat.Png); //Сохраняем картинку как png по заданному пользователем ранее пути 
         }
 
 
-        private void reloadBtn_Click(object sender, EventArgs e)
+        private void reloadBtn_Click(object sender, EventArgs e) //Кнопка очистки формы
         {
-            this.Controls.Clear();
-            this.InitializeComponent();
-            LoadPictures(folderName);
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            this.Controls.Clear(); //Очищаем все контролы
+            this.InitializeComponent(); //Заново инициализируем все компоненты
+            LoadPictures(folderName); //Подгружаем картинки
         }
     }
     

@@ -14,3 +14,4 @@ C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp
 C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.dll
 C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.pdb
 C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.genruntimeconfig.cache
+C:\Users\Hiklona\source\repos\LoreCollector\LoreCollector\obj\Release\netcoreapp3.1\LoreCollector.csproj.AssemblyReference.cache

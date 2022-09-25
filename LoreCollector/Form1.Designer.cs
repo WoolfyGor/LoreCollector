@@ -34,17 +34,13 @@ namespace LoreCollector
             this.ChooseFile = new System.Windows.Forms.Button();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.startLogo = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SaveAsImage = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.reloadBtn = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -59,12 +55,12 @@ namespace LoreCollector
             this.ChooseFile.TabIndex = 0;
             this.ChooseFile.Text = "Выбрать файл логов";
             this.ChooseFile.UseVisualStyleBackColor = true;
-            this.ChooseFile.Click += new System.EventHandler(this.button1_Click);
+            this.ChooseFile.Click += new System.EventHandler(this.chooseLog_Click);
             // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.mainPanel.BackgroundImage = global::LoreCollector.Properties.Resources.backgroundred;
+            this.mainPanel.BackgroundImage = global::LoreCollector.Properties.Resources.background2;
             this.mainPanel.Controls.Add(this.startLogo);
             this.mainPanel.Location = new System.Drawing.Point(69, 48);
             this.mainPanel.Name = "mainPanel";
@@ -74,26 +70,13 @@ namespace LoreCollector
             // startLogo
             // 
             this.startLogo.BackColor = System.Drawing.Color.Transparent;
-            this.startLogo.BackgroundImage = global::LoreCollector.Properties.Resources.DiemansionProfessorsDeath;
-            this.startLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.startLogo.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
+            this.startLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.startLogo.Location = new System.Drawing.Point(35, 18);
             this.startLogo.Name = "startLogo";
             this.startLogo.Size = new System.Drawing.Size(616, 90);
             this.startLogo.TabIndex = 7;
             this.startLogo.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureBox1.Location = new System.Drawing.Point(899, 256);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(54, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // SaveAsImage
             // 
@@ -121,13 +104,6 @@ namespace LoreCollector
             this.reloadBtn.UseVisualStyleBackColor = true;
             this.reloadBtn.Click += new System.EventHandler(this.reloadBtn_Click);
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(885, 208);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 23);
-            this.textBox1.TabIndex = 5;
-            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(824, 379);
@@ -138,36 +114,21 @@ namespace LoreCollector
             this.textBox2.Text = "Головы персонажей загружать в дерикторию PlayerHeads, формат ИМЯБЕЗЗНАКОВ.png\r\nЛо" +
     "ги выбирать только с кодировкой UTF-8. \r\nПеред повторной загрузкой логов нажать " +
     "на кнопку очистки.\r\n";
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(824, 498);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(222, 551);
-            this.textBox3.TabIndex = 7;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 1061);
-            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.reloadBtn);
             this.Controls.Add(this.SaveAsImage);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.ChooseFile);
             this.Name = "Form1";
             this.Text = "Lore Collector";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.mainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,10 +144,7 @@ namespace LoreCollector
         private System.Windows.Forms.PictureBox startLogo;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button reloadBtn;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
