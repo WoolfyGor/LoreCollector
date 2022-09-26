@@ -30,6 +30,7 @@ namespace LoreCollector
         {
             InitializeComponent(); 
             AllocConsole();//Подключение консоли для дебаггинга
+            pfc.AddFontFile("fonts\\minecraft.ttf"); // Подключение шрифта кастомного
             nickNames.Clear(); // Очищение спииска ников
             LoadPictures(folderName); // Загрузка картинок голов из папки
 
@@ -67,7 +68,6 @@ namespace LoreCollector
         
         public void InitCustomLabelFont(Control cc)
         {
-            pfc.AddFontFile("D:\\minecraft.ttf"); // Подключение шрифта кастомного
             cc.Font = new Font(pfc.Families[0], 8, FontStyle.Regular);    // Заменяет шрифты у передаваемого контрола
         }
         
@@ -78,7 +78,6 @@ namespace LoreCollector
             lastY = 100; // Очищение значения к исходному
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) // Сложная мешанина из интернета с считыванием файла с интернета
             {
-                openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
@@ -325,6 +324,52 @@ namespace LoreCollector
             this.Controls.Clear(); //Очищаем все контролы
             this.InitializeComponent(); //Заново инициализируем все компоненты
             LoadPictures(folderName); //Подгружаем картинки
+        }
+        private void ResetLogo()
+        {
+            startLogo.BackgroundImage = Properties.Resources.diemansionsmp;
+            startLogo.BackgroundImageLayout = ImageLayout.Center;
+        }
+
+        private void вернутьКИсходномуToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetLogo();
+        }
+
+        private void MainStyleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainPanel.BackgroundImage = Properties.Resources.background2;
+        }
+
+        private void OneShotToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainPanel.BackgroundImage = Properties.Resources.backgroundred;
+        }
+
+        private void LogoChangeOnCustomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) // Сложная мешанина из интернета с считыванием файла с интернета
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) // Если в окне выбора файла нажали ОК, то
+                {
+                    filePath = openFileDialog.FileName;
+                    if (File.Exists(filePath))
+                    {
+                        startLogo.BackgroundImage = Image.FromFile(filePath);
+                        startLogo.BackgroundImageLayout = ImageLayout.Zoom;
+                    }
+                    else
+                        ResetLogo();
+
+                }
+
+            }
         }
     }
     

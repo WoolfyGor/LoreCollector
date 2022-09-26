@@ -39,8 +39,16 @@ namespace LoreCollector
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.reloadBtn = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.стилиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.обычныйсинийToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ваншотToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.логоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сменитьЛогоНаКастомноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.вернутьКИсходномуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -115,6 +123,63 @@ namespace LoreCollector
     "ги выбирать только с кодировкой UTF-8. \r\nПеред повторной загрузкой логов нажать " +
     "на кнопку очистки.\r\n";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.стилиToolStripMenuItem,
+            this.логоToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1058, 24);
+            this.menuStrip1.TabIndex = 8;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // стилиToolStripMenuItem
+            // 
+            this.стилиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.обычныйсинийToolStripMenuItem,
+            this.ваншотToolStripMenuItem});
+            this.стилиToolStripMenuItem.Name = "стилиToolStripMenuItem";
+            this.стилиToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.стилиToolStripMenuItem.Text = "Стили";
+            // 
+            // обычныйсинийToolStripMenuItem
+            // 
+            this.обычныйсинийToolStripMenuItem.Name = "обычныйсинийToolStripMenuItem";
+            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.обычныйсинийToolStripMenuItem.Text = "Обычный (синий)";
+            this.обычныйсинийToolStripMenuItem.Click += new System.EventHandler(this.MainStyleToolStripMenuItem_Click);
+            // 
+            // ваншотToolStripMenuItem
+            // 
+            this.ваншотToolStripMenuItem.Name = "ваншотToolStripMenuItem";
+            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ваншотToolStripMenuItem.Text = "Ваншот";
+            this.ваншотToolStripMenuItem.Click += new System.EventHandler(this.OneShotToolStripMenuItem_Click);
+            // 
+            // логоToolStripMenuItem
+            // 
+            this.логоToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.сменитьЛогоНаКастомноеToolStripMenuItem,
+            this.вернутьКИсходномуToolStripMenuItem});
+            this.логоToolStripMenuItem.Name = "логоToolStripMenuItem";
+            this.логоToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.логоToolStripMenuItem.Text = "Лого";
+            // 
+            // сменитьЛогоНаКастомноеToolStripMenuItem
+            // 
+            this.сменитьЛогоНаКастомноеToolStripMenuItem.Name = "сменитьЛогоНаКастомноеToolStripMenuItem";
+            this.сменитьЛогоНаКастомноеToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.сменитьЛогоНаКастомноеToolStripMenuItem.Text = "Сменить лого на кастомное";
+            this.сменитьЛогоНаКастомноеToolStripMenuItem.Click += new System.EventHandler(this.LogoChangeOnCustomToolStripMenuItem_Click);
+            // 
+            // вернутьКИсходномуToolStripMenuItem
+            // 
+            this.вернутьКИсходномуToolStripMenuItem.Name = "вернутьКИсходномуToolStripMenuItem";
+            this.вернутьКИсходномуToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.вернутьКИсходномуToolStripMenuItem.Text = "Вернуть к исходному";
+            this.вернутьКИсходномуToolStripMenuItem.Click += new System.EventHandler(this.вернутьКИсходномуToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -125,10 +190,14 @@ namespace LoreCollector
             this.Controls.Add(this.SaveAsImage);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.ChooseFile);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Lore Collector";
             this.mainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -145,6 +214,13 @@ namespace LoreCollector
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button reloadBtn;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem стилиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem обычныйсинийToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ваншотToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem логоToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сменитьЛогоНаКастомноеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem вернутьКИсходномуToolStripMenuItem;
     }
 }
 

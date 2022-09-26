@@ -6,8 +6,8 @@
       "version": "3.1.0"
     },
     "additionalProbingPaths": [
-      "C:\\Users\\Hiklona\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Hiklona\\.nuget\\packages"
+      "C:\\Users\\Папочка\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Папочка\\.nuget\\packages"
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
