@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace LoreCollector
 {
@@ -103,12 +104,12 @@ namespace LoreCollector
         {
             int StartLine = 0; // Строка, с которой начинается поиск сообщений
             List<string> coolLore = new List<string>();
-            for(int i = 0; i < fullContent.Length; i++)
-            {
-                if (!fullContent[i].Contains("Done")) // первое сообщение перед заходом на сервер
-                    continue;
-                StartLine = i;
-            }
+            //for(int i = 0; i < fullContent.Length; i++)
+            //{
+            //    if (!fullContent[i].Contains("Done")) // первое сообщение перед заходом на сервер
+            //        continue;
+            //    StartLine = i;
+            //}
 
             for(int i = StartLine+1; i < fullContent.Length; i++)
             {
@@ -161,10 +162,14 @@ namespace LoreCollector
         }
         private void SetupDialogBubble(int width,string line)
         {
-
+            string name =  GetName(line);
+            if(checkedListBox1.CheckedItems.Count!=0 && !CheckName(name))
+                return;
             Panel newPanel = SetupPanel(width, lastY, spacing); // Создается панель для содержания в себе элементов
             Label newLabel = SetupLabel(width, line, charactersTonewLine, newPanel); // Создается текстовый лейбл внутри панели
-            SetupImage(newPanel, newLabel,line); //Устанавливается картинка в панель
+            var image= SetupImage(newPanel, newLabel,line); //Устанавливается картинка в панель
+            if (image == null)
+                return;
             prevLine = line; // Сохраняем предыдущую строку для проверки оффсета
             mainPanel.Controls.Add(newPanel); //Добавляем созданную панель внутрь основной панели
         }
@@ -198,16 +203,32 @@ namespace LoreCollector
             newPicture.SizeMode =PictureBoxSizeMode.Zoom; // Выставляется режим масштабирования картинки
             newPicture.Location = new Point(15, (int)(newLine.Height / 1.5)); //Выставляется позиция картинки относительно текстового поля
             newPanel.Controls.Add(newPicture); //На панель добавляется картинка
+            string name = GetName(line);
+
+            
+            bool isChecked = false;
+            if (checkedListBox1.CheckedItems.Count!=0)
+                 isChecked = CheckName(name);
+           
+            newPicture = SetHeadPicture(newPicture, name); // Присваивается изображение внутрь контрола с картинкой по имени
+            
+            return checkedListBox1.CheckedItems.Count==0?newPicture:(isChecked)?newPicture: null; //Возвращаем картинку
+        }
+        bool CheckName(string name)
+        {
+            return checkedListBox1.CheckedItems.Contains(name);
+        }
+        string GetName(string line)
+        {
             string name;
 
-            if (line.Trim().Substring(0,3).Contains("*")) {
-                name= line.Trim().Substring(2,line.Trim().IndexOf(" ",3)-2); //Если сообщение пишется через /me (имеет звездочку вначале), то отрабатывает обрезание ника по одной последовательности
+            if (line.Trim().Substring(0, 3).Contains("*"))
+            {
+                name = line.Trim().Substring(2, line.Trim().IndexOf(" ", 3) - 2); //Если сообщение пишется через /me (имеет звездочку вначале), то отрабатывает обрезание ника по одной последовательности
             }
             else
-                 name = line.Trim().Substring(0, line.IndexOf(" ")); // Если сообщение обычное, то по другой 
-
-            newPicture = SetHeadPicture(newPicture, name); // Присваивается изображение внутрь контрола с картинкой по имени
-            return newPicture; //Возвращаем картинку
+                name = line.Trim().Substring(0, line.IndexOf(" ")); // Если сообщение обычное, то по другой 
+            return name;
         }
         private Label SetupLabel (int width,string line, float charactersToNewLine,Panel newPanel)
         {

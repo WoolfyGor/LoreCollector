@@ -46,6 +46,7 @@ namespace LoreCollector
             this.логоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сменитьЛогоНаКастомноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.вернутьКИсходномуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -146,14 +147,14 @@ namespace LoreCollector
             // обычныйсинийToolStripMenuItem
             // 
             this.обычныйсинийToolStripMenuItem.Name = "обычныйсинийToolStripMenuItem";
-            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.обычныйсинийToolStripMenuItem.Text = "Обычный (синий)";
             this.обычныйсинийToolStripMenuItem.Click += new System.EventHandler(this.MainStyleToolStripMenuItem_Click);
             // 
             // ваншотToolStripMenuItem
             // 
             this.ваншотToolStripMenuItem.Name = "ваншотToolStripMenuItem";
-            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.ваншотToolStripMenuItem.Text = "Ваншот";
             this.ваншотToolStripMenuItem.Click += new System.EventHandler(this.OneShotToolStripMenuItem_Click);
             // 
@@ -180,11 +181,33 @@ namespace LoreCollector
             this.вернутьКИсходномуToolStripMenuItem.Text = "Вернуть к исходному";
             this.вернутьКИсходномуToolStripMenuItem.Click += new System.EventHandler(this.вернутьКИсходномуToolStripMenuItem_Click);
             // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Рут",
+            "Херотч",
+            "Вивиан",
+            "Аластеир",
+            "Профессор",
+            "Мошка",
+            "Мун",
+            "Хаджуми",
+            "Альберт",
+            "Ядвиг",
+            "Рой",
+            "Хлор"});
+            this.checkedListBox1.Location = new System.Drawing.Point(824, 164);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(222, 130);
+            this.checkedListBox1.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 1061);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.reloadBtn);
             this.Controls.Add(this.SaveAsImage);
@@ -221,6 +244,7 @@ namespace LoreCollector
         private System.Windows.Forms.ToolStripMenuItem логоToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сменитьЛогоНаКастомноеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem вернутьКИсходномуToolStripMenuItem;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
     }
 }
 
