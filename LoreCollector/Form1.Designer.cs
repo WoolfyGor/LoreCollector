@@ -184,19 +184,6 @@ namespace LoreCollector
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Items.AddRange(new object[] {
-            "Рут",
-            "Херотч",
-            "Вивиан",
-            "Аластеир",
-            "Профессор",
-            "Мошка",
-            "Мун",
-            "Хаджуми",
-            "Альберт",
-            "Ядвиг",
-            "Рой",
-            "Хлор"});
             this.checkedListBox1.Location = new System.Drawing.Point(824, 164);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(222, 130);

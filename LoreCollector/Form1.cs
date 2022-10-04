@@ -55,6 +55,10 @@ namespace LoreCollector
                 var charName = s.Substring(s.IndexOf("@")+1);
                 nickNames.Add(nick, charName); // В список ников добавляется пара ник-имя персонажа
             }
+            foreach(var nick in nickNames)
+            {
+                checkedListBox1.Items.Add(nick.Value) ;
+            }
             fstream.Close();
             var files = Directory.GetFiles(folderName, "*.*")
                 .ToList(); // Создает список всех файлов из указанной дериктории с любым именем/расширением
