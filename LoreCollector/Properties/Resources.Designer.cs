@@ -163,6 +163,26 @@ namespace LoreCollector.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap g0R5 {
+            get {
+                object obj = ResourceManager.GetObject("g0R5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap H0bj {
+            get {
+                object obj = ResourceManager.GetObject("H0bj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap image_2019_12_13_16_29_55_695 {
             get {
                 object obj = ResourceManager.GetObject("image-2019-12-13-16-29-55-695", resourceCulture);

@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 namespace LoreCollector
 {
@@ -34,8 +35,27 @@ namespace LoreCollector
             pfc.AddFontFile("fonts\\minecraft.ttf"); // Подключение шрифта кастомного
             nickNames.Clear(); // Очищение спииска ников
             LoadPictures(folderName); // Загрузка картинок голов из папки
-
+            SetupComboBoxes();
         }
+
+        private void SetupComboBoxes()
+        {
+            for (int i = 0; i < 60; i++)
+            {
+                if (i < 24) { 
+                    hoursComboBoxStart.Items.Add(i);
+                    hoursComboBoxEnd.Items.Add(i);
+                }
+                minutesComboBoxStart.Items.Add(i);
+                minutesComboBoxEnd.Items.Add(i);
+            }
+            hoursComboBoxStart.SelectedIndex = 0;
+            hoursComboBoxEnd.SelectedIndex = hoursComboBoxEnd.Items.Count - 1;
+            minutesComboBoxStart.SelectedIndex = 0;
+            minutesComboBoxEnd.SelectedIndex = minutesComboBoxEnd.Items.Count - 1;
+            timeSelectPanel.Enabled = false;
+        }
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -57,7 +77,7 @@ namespace LoreCollector
             }
             foreach(var nick in nickNames)
             {
-                checkedListBox1.Items.Add(nick.Value) ;
+                charactersSelectList.Items.Add(nick.Value) ;
             }
             fstream.Close();
             var files = Directory.GetFiles(folderName, "*.*")
@@ -118,7 +138,36 @@ namespace LoreCollector
             for(int i = StartLine+1; i < fullContent.Length; i++)
             {
                 var line = fullContent[i];
-                if(line.Contains("[Not")) //Поиск серверного сообщения [Not Secure], им помечаются сообщения игроков.
+                int lineHour, lineMinute;
+                try { 
+                int.TryParse(line.Substring(1, 2), out lineHour);
+                int.TryParse(line.Substring(4, 2),out lineMinute);
+                }
+                catch
+                {
+                    continue;
+                }
+                int beforeHour, afterHour, beforeMinute, afterMinute ;
+                
+                if (timeSelectCheckBox.Checked)
+                {
+                    int.TryParse(hoursComboBoxStart.Text, out beforeHour);
+                    int.TryParse(hoursComboBoxEnd.Text, out afterHour);
+                    int.TryParse(minutesComboBoxStart.Text, out beforeMinute);
+                    int.TryParse(minutesComboBoxEnd.Text, out afterMinute);
+                    var nullDateTime = new DateTime();
+                    var lineTime= new DateTime();
+                    var startTime = new DateTime();
+                    var endTime = new DateTime();
+                    lineTime = nullDateTime.AddHours(lineHour).AddMinutes(lineMinute);
+                    startTime = nullDateTime.AddHours(beforeHour).AddMinutes(beforeMinute);
+                    endTime = nullDateTime.AddHours(afterHour).AddMinutes(afterMinute);
+
+                    if (!(lineTime >= startTime && lineTime <= endTime))
+                             continue;
+
+                }
+                if (line.Contains("[Not")) //Поиск серверного сообщения [Not Secure], им помечаются сообщения игроков.
                 {
                     int pos = line.IndexOf("re]") +3; // Оффсет на конец сообщения [Not Secure]
 
@@ -129,7 +178,8 @@ namespace LoreCollector
                             if (!line.Substring(pos).Contains("> 9")) // И ещё
                             {
                                 if (!line.Substring(pos).Contains("> )")) // И ещё
-                                { 
+                                {
+                                    
                                     var needles = new string[] { "<", "#", ">" }; // Массив символов, которые нужно убрать из конечного сообщения
                                     foreach (var needle in needles)
                                     {
@@ -167,7 +217,7 @@ namespace LoreCollector
         private void SetupDialogBubble(int width,string line)
         {
             string name =  GetName(line);
-            if(checkedListBox1.CheckedItems.Count!=0 && !CheckName(name))
+            if(charactersSelectList.CheckedItems.Count!=0 && !CheckName(name))
                 return;
             Panel newPanel = SetupPanel(width, lastY, spacing); // Создается панель для содержания в себе элементов
             Label newLabel = SetupLabel(width, line, charactersTonewLine, newPanel); // Создается текстовый лейбл внутри панели
@@ -211,16 +261,16 @@ namespace LoreCollector
 
             
             bool isChecked = false;
-            if (checkedListBox1.CheckedItems.Count!=0)
+            if (charactersSelectList.CheckedItems.Count!=0)
                  isChecked = CheckName(name);
            
             newPicture = SetHeadPicture(newPicture, name); // Присваивается изображение внутрь контрола с картинкой по имени
             
-            return checkedListBox1.CheckedItems.Count==0?newPicture:(isChecked)?newPicture: null; //Возвращаем картинку
+            return charactersSelectList.CheckedItems.Count==0?newPicture:(isChecked)?newPicture: null; //Возвращаем картинку
         }
         bool CheckName(string name)
         {
-            return checkedListBox1.CheckedItems.Contains(name);
+            return charactersSelectList.CheckedItems.Contains(name);
         }
         string GetName(string line)
         {
@@ -328,19 +378,23 @@ namespace LoreCollector
         {
             SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
             sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
-
-               
+            this.BackColor = Color.IndianRed;
             sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
             var path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
             if (path == "") //Если путь пустой - прекращаем работу функции
+            {
+                this.BackColor = SystemColors.Control;
+                MessageBox.Show("Выберите путь и название файла.");
                 return;
+            }
 
             int width = mainPanel.Size.Width; //Задаем ширину основной панели в ширину будущей картинки
             int height = mainPanel.Size.Height; //Задаем ширину основной панели в ширину будущей картинки
             Bitmap bm = new Bitmap(width, height); //Создаем новый битмап заданных размеров
-            MessageBox.Show("Идёт создание картинки, ожидайте", "В процессе..."); //Окно-предупреждение
+            
             mainPanel.DrawToBitmap(bm, new Rectangle(0, 0, width, height)); //Перерисовываем панель со всеми фонами как Битмап в нашу переменную.
             bm.Save(path, ImageFormat.Png); //Сохраняем картинку как png по заданному пользователем ранее пути 
+            this.BackColor = SystemColors.Control;
         }
 
 
@@ -349,6 +403,7 @@ namespace LoreCollector
             this.Controls.Clear(); //Очищаем все контролы
             this.InitializeComponent(); //Заново инициализируем все компоненты
             LoadPictures(folderName); //Подгружаем картинки
+            SetupComboBoxes();
         }
         private void ResetLogo()
         {
@@ -395,6 +450,16 @@ namespace LoreCollector
                 }
 
             }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timeSelectCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            timeSelectPanel.Enabled = timeSelectCheckBox.Checked;
         }
     }
     

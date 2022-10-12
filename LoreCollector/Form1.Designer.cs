@@ -46,10 +46,24 @@ namespace LoreCollector
             this.логоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сменитьЛогоНаКастомноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.вернутьКИсходномуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.charactersSelectList = new System.Windows.Forms.CheckedListBox();
+            this.hoursComboBoxStart = new System.Windows.Forms.ComboBox();
+            this.minutesComboBoxStart = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.hoursComboBoxEnd = new System.Windows.Forms.ComboBox();
+            this.minutesComboBoxEnd = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.timeSelectPanel = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.timeSelectCheckBox = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.timeSelectPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -115,7 +129,7 @@ namespace LoreCollector
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(824, 379);
+            this.textBox2.Location = new System.Drawing.Point(824, 428);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(222, 113);
@@ -181,20 +195,147 @@ namespace LoreCollector
             this.вернутьКИсходномуToolStripMenuItem.Text = "Вернуть к исходному";
             this.вернутьКИсходномуToolStripMenuItem.Click += new System.EventHandler(this.вернутьКИсходномуToolStripMenuItem_Click);
             // 
-            // checkedListBox1
+            // charactersSelectList
             // 
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(824, 164);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(222, 130);
-            this.checkedListBox1.TabIndex = 9;
+            this.charactersSelectList.FormattingEnabled = true;
+            this.charactersSelectList.Location = new System.Drawing.Point(824, 164);
+            this.charactersSelectList.Name = "charactersSelectList";
+            this.charactersSelectList.Size = new System.Drawing.Size(222, 130);
+            this.charactersSelectList.TabIndex = 9;
+            // 
+            // hoursComboBoxStart
+            // 
+            this.hoursComboBoxStart.FormattingEnabled = true;
+            this.hoursComboBoxStart.Location = new System.Drawing.Point(34, 23);
+            this.hoursComboBoxStart.Name = "hoursComboBoxStart";
+            this.hoursComboBoxStart.Size = new System.Drawing.Size(36, 23);
+            this.hoursComboBoxStart.TabIndex = 10;
+            // 
+            // minutesComboBoxStart
+            // 
+            this.minutesComboBoxStart.FormattingEnabled = true;
+            this.minutesComboBoxStart.Location = new System.Drawing.Point(85, 23);
+            this.minutesComboBoxStart.Name = "minutesComboBoxStart";
+            this.minutesComboBoxStart.Size = new System.Drawing.Size(36, 23);
+            this.minutesComboBoxStart.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(34, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(36, 15);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Часы";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(87, 29);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(52, 15);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Минуты";
+            // 
+            // hoursComboBoxEnd
+            // 
+            this.hoursComboBoxEnd.FormattingEnabled = true;
+            this.hoursComboBoxEnd.Location = new System.Drawing.Point(34, 71);
+            this.hoursComboBoxEnd.Name = "hoursComboBoxEnd";
+            this.hoursComboBoxEnd.Size = new System.Drawing.Size(36, 23);
+            this.hoursComboBoxEnd.TabIndex = 10;
+            // 
+            // minutesComboBoxEnd
+            // 
+            this.minutesComboBoxEnd.FormattingEnabled = true;
+            this.minutesComboBoxEnd.Location = new System.Drawing.Point(85, 71);
+            this.minutesComboBoxEnd.Name = "minutesComboBoxEnd";
+            this.minutesComboBoxEnd.Size = new System.Drawing.Size(36, 23);
+            this.minutesComboBoxEnd.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(34, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 15);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Часы";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(83, 53);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(52, 15);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Минуты";
+            // 
+            // timeSelectPanel
+            // 
+            this.timeSelectPanel.Controls.Add(this.hoursComboBoxStart);
+            this.timeSelectPanel.Controls.Add(this.label4);
+            this.timeSelectPanel.Controls.Add(this.label7);
+            this.timeSelectPanel.Controls.Add(this.label6);
+            this.timeSelectPanel.Controls.Add(this.label5);
+            this.timeSelectPanel.Controls.Add(this.minutesComboBoxStart);
+            this.timeSelectPanel.Controls.Add(this.label3);
+            this.timeSelectPanel.Controls.Add(this.label1);
+            this.timeSelectPanel.Controls.Add(this.minutesComboBoxEnd);
+            this.timeSelectPanel.Controls.Add(this.hoursComboBoxEnd);
+            this.timeSelectPanel.Location = new System.Drawing.Point(824, 322);
+            this.timeSelectPanel.Name = "timeSelectPanel";
+            this.timeSelectPanel.Size = new System.Drawing.Size(188, 100);
+            this.timeSelectPanel.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(85, 3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Минуты";
+            // 
+            // timeSelectCheckBox
+            // 
+            this.timeSelectCheckBox.AutoSize = true;
+            this.timeSelectCheckBox.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.timeSelectCheckBox.Location = new System.Drawing.Point(824, 300);
+            this.timeSelectCheckBox.Name = "timeSelectCheckBox";
+            this.timeSelectCheckBox.Size = new System.Drawing.Size(212, 16);
+            this.timeSelectCheckBox.TabIndex = 13;
+            this.timeSelectCheckBox.Text = "Сортировка по времени (включительно)";
+            this.timeSelectCheckBox.UseVisualStyleBackColor = true;
+            this.timeSelectCheckBox.CheckedChanged += new System.EventHandler(this.timeSelectCheckBox_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(13, 15);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "с";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 71);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(21, 15);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "по";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 1061);
-            this.Controls.Add(this.checkedListBox1);
+            this.Controls.Add(this.timeSelectCheckBox);
+            this.Controls.Add(this.timeSelectPanel);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.charactersSelectList);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.reloadBtn);
             this.Controls.Add(this.SaveAsImage);
@@ -208,6 +349,8 @@ namespace LoreCollector
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.timeSelectPanel.ResumeLayout(false);
+            this.timeSelectPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,7 +374,20 @@ namespace LoreCollector
         private System.Windows.Forms.ToolStripMenuItem логоToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сменитьЛогоНаКастомноеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem вернутьКИсходномуToolStripMenuItem;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox charactersSelectList;
+        private System.Windows.Forms.ComboBox hoursComboBoxStart;
+        private System.Windows.Forms.ComboBox minutesComboBoxStart;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox hoursComboBoxEnd;
+        private System.Windows.Forms.ComboBox minutesComboBoxEnd;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel timeSelectPanel;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox timeSelectCheckBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
     }
 }
 
