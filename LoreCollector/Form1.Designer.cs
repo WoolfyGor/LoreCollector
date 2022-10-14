@@ -46,6 +46,11 @@ namespace LoreCollector
             this.логоToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сменитьЛогоНаКастомноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.вернутьКИсходномуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.серверToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveViaSftpArchives = new System.Windows.Forms.ToolStripMenuItem();
+            this.unzipZips = new System.Windows.Forms.ToolStripMenuItem();
+            this.collectLogsToClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.DivideLogs = new System.Windows.Forms.ToolStripMenuItem();
             this.charactersSelectList = new System.Windows.Forms.CheckedListBox();
             this.hoursComboBoxStart = new System.Windows.Forms.ComboBox();
             this.minutesComboBoxStart = new System.Windows.Forms.ComboBox();
@@ -56,14 +61,16 @@ namespace LoreCollector
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.timeSelectPanel = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.timeSelectCheckBox = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.logoPrefab = new System.Windows.Forms.PictureBox();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.timeSelectPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -142,7 +149,8 @@ namespace LoreCollector
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.стилиToolStripMenuItem,
-            this.логоToolStripMenuItem});
+            this.логоToolStripMenuItem,
+            this.серверToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1058, 24);
@@ -194,6 +202,45 @@ namespace LoreCollector
             this.вернутьКИсходномуToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this.вернутьКИсходномуToolStripMenuItem.Text = "Вернуть к исходному";
             this.вернутьКИсходномуToolStripMenuItem.Click += new System.EventHandler(this.вернутьКИсходномуToolStripMenuItem_Click);
+            // 
+            // серверToolStripMenuItem
+            // 
+            this.серверToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveViaSftpArchives,
+            this.unzipZips,
+            this.collectLogsToClear,
+            this.DivideLogs});
+            this.серверToolStripMenuItem.Name = "серверToolStripMenuItem";
+            this.серверToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.серверToolStripMenuItem.Text = "Сервер";
+            // 
+            // saveViaSftpArchives
+            // 
+            this.saveViaSftpArchives.Name = "saveViaSftpArchives";
+            this.saveViaSftpArchives.Size = new System.Drawing.Size(253, 22);
+            this.saveViaSftpArchives.Text = "Скачать архивы по sftp";
+            this.saveViaSftpArchives.Click += new System.EventHandler(this.saveViaSftpArchives_Click);
+            // 
+            // unzipZips
+            // 
+            this.unzipZips.Name = "unzipZips";
+            this.unzipZips.Size = new System.Drawing.Size(253, 22);
+            this.unzipZips.Text = "Разархивировать логи";
+            this.unzipZips.Click += new System.EventHandler(this.unzipZips_Click);
+            // 
+            // collectLogsToClear
+            // 
+            this.collectLogsToClear.Name = "collectLogsToClear";
+            this.collectLogsToClear.Size = new System.Drawing.Size(253, 22);
+            this.collectLogsToClear.Text = "Собрать логи по дням чистовые";
+            this.collectLogsToClear.Click += new System.EventHandler(this.collectLogsToClear_Click);
+            // 
+            // DivideLogs
+            // 
+            this.DivideLogs.Name = "DivideLogs";
+            this.DivideLogs.Size = new System.Drawing.Size(253, 22);
+            this.DivideLogs.Text = "Разбить избыточные логи";
+            this.DivideLogs.Click += new System.EventHandler(this.DivideLogs_Click);
             // 
             // charactersSelectList
             // 
@@ -288,6 +335,24 @@ namespace LoreCollector
             this.timeSelectPanel.Size = new System.Drawing.Size(188, 100);
             this.timeSelectPanel.TabIndex = 12;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 71);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(21, 15);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "по";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(13, 15);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "с";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -309,29 +374,24 @@ namespace LoreCollector
             this.timeSelectCheckBox.UseVisualStyleBackColor = true;
             this.timeSelectCheckBox.CheckedChanged += new System.EventHandler(this.timeSelectCheckBox_CheckedChanged);
             // 
-            // label6
+            // logoPrefab
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 27);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(13, 15);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "с";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 71);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(21, 15);
-            this.label7.TabIndex = 11;
-            this.label7.Text = "по";
+            this.logoPrefab.BackColor = System.Drawing.Color.Transparent;
+            this.logoPrefab.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
+            this.logoPrefab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.logoPrefab.Location = new System.Drawing.Point(104, 393);
+            this.logoPrefab.Name = "logoPrefab";
+            this.logoPrefab.Size = new System.Drawing.Size(616, 90);
+            this.logoPrefab.TabIndex = 7;
+            this.logoPrefab.TabStop = false;
+            this.logoPrefab.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 1061);
+            this.Controls.Add(this.logoPrefab);
             this.Controls.Add(this.timeSelectCheckBox);
             this.Controls.Add(this.timeSelectPanel);
             this.Controls.Add(this.label2);
@@ -351,6 +411,7 @@ namespace LoreCollector
             this.menuStrip1.PerformLayout();
             this.timeSelectPanel.ResumeLayout(false);
             this.timeSelectPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -388,6 +449,12 @@ namespace LoreCollector
         private System.Windows.Forms.CheckBox timeSelectCheckBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ToolStripMenuItem серверToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveViaSftpArchives;
+        private System.Windows.Forms.ToolStripMenuItem unzipZips;
+        private System.Windows.Forms.ToolStripMenuItem collectLogsToClear;
+        private System.Windows.Forms.ToolStripMenuItem DivideLogs;
+        private System.Windows.Forms.PictureBox logoPrefab;
     }
 }
 

@@ -33,3 +33,6 @@ G:\WFormsProj\LoreCollector\LoreCollector\obj\Debug\netcoreapp3.1\LoreCollector.
 G:\WFormsProj\LoreCollector\LoreCollector\obj\Debug\netcoreapp3.1\LoreCollector.dll
 G:\WFormsProj\LoreCollector\LoreCollector\obj\Debug\netcoreapp3.1\LoreCollector.pdb
 G:\WFormsProj\LoreCollector\LoreCollector\obj\Debug\netcoreapp3.1\LoreCollector.genruntimeconfig.cache
+G:\WFormsProj\LoreCollector\LoreCollector\bin\Debug\netcoreapp3.1\Renci.SshNet.dll
+G:\WFormsProj\LoreCollector\LoreCollector\bin\Debug\netcoreapp3.1\SshNet.Security.Cryptography.dll
+G:\WFormsProj\LoreCollector\LoreCollector\obj\Debug\netcoreapp3.1\LoreCollector.csproj.CopyComplete

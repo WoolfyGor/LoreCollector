@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "TLzCXJ/qm6bdNXQact30/RXJOA8Tny1+NF9Xa0spOu1vjx8/CWZgHLPXUyB1OeZ2Os7FwZROECbYflRvroOlag==",
+  "dgSpecHash": "LxMjUn1cbHIeJ+VNXH63x1dDnNbg5ATlCT+1gRJLovAuF4rysxienFcKQmukQZ8/IzBThVrEzc9kzJ8Kdx3Z2Q==",
   "success": true,
   "projectFilePath": "G:\\WFormsProj\\LoreCollector\\LoreCollector\\LoreCollector.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Папочка\\.nuget\\packages\\ssh.net\\2020.0.2\\ssh.net.2020.0.2.nupkg.sha512",
+    "C:\\Users\\Папочка\\.nuget\\packages\\sshnet.security.cryptography\\1.3.0\\sshnet.security.cryptography.1.3.0.nupkg.sha512"
+  ],
   "logs": []
 }
