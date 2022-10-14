@@ -47,8 +47,16 @@ namespace LoreCollector
             SetupComboBoxes();
             currentLogo = startLogo;
             LogoPos.Location = startLogo.Location;
+            CreateIfMissing(logsPath);
+            CreateIfMissing($"{logsPath}/{rawLogsPath}");
+            CreateIfMissing($"{logsPath}/{rawLogsPath}/{endLogsPath}");
         }
-
+        private void CreateIfMissing(string path)
+        {
+            bool folderExists = Directory.Exists(path);
+            if (!folderExists)
+                Directory.CreateDirectory(path);
+        }
         private void SetupComboBoxes()
         {
             for (int i = 0; i < 60; i++)
@@ -486,6 +494,8 @@ namespace LoreCollector
 
         private void GetFiles(ConnectionInfo connectionInfo, string remoteDirectory)
         {
+            if (connectionInfo == null)
+                return;
             using (var sftp = new SftpClient(connectionInfo))
             {
                 try
@@ -499,6 +509,7 @@ namespace LoreCollector
                 catch (Exception e)
                 {
                     Console.WriteLine("An exception has been caught " + e.ToString());
+                    MessageBox.Show("Ошибка при подключении по SFTP протоколу.");
                 }
             }
         }
@@ -543,8 +554,9 @@ namespace LoreCollector
         }
         private ConnectionInfo GetConnInfo(string dataFile)
         {
-            string host, username, password, line;
-            int port;
+            string host="", username="", password="", line="";
+            int port =0;
+            try { 
             using (StreamReader reader = new StreamReader(dataFile))
             {
                 host = reader.ReadLine();
@@ -552,7 +564,12 @@ namespace LoreCollector
                 password = reader.ReadLine();
                 int.TryParse(reader.ReadLine(), out port);
             }
-
+            }
+            catch
+            {
+                MessageBox.Show("Нет файла авторизации!");
+                return null;
+            }
             KeyboardInteractiveAuthenticationMethod kauth = new KeyboardInteractiveAuthenticationMethod(username);
             PasswordAuthenticationMethod pauth = new PasswordAuthenticationMethod(username, password);
 

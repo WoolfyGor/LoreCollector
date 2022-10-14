@@ -1,0 +1,4 @@
+hostAdress
+Username
+Password
+port
