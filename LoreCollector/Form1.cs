@@ -11,8 +11,6 @@ using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using File = System.IO.File;
 using System.IO.Compression;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Numerics;
 
 namespace LoreCollector
 {
@@ -407,12 +405,12 @@ namespace LoreCollector
         {
             SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
             sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
-            this.BackColor = Color.IndianRed;
+            ChangeWindowColorState(true);
             sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
             var path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
             if (path == "") //Если путь пустой - прекращаем работу функции
             {
-                this.BackColor = SystemColors.Control;
+                ChangeWindowColorState(false);
                 MessageBox.Show("Выберите путь и название файла.");
                 return;
             }
@@ -423,10 +421,16 @@ namespace LoreCollector
 
             mainPanel.DrawToBitmap(bm, new Rectangle(0, 0, width, height)); //Перерисовываем панель со всеми фонами как Битмап в нашу переменную.
             bm.Save(path, ImageFormat.Png); //Сохраняем картинку как png по заданному пользователем ранее пути 
-            this.BackColor = SystemColors.Control;
+            ChangeWindowColorState(false);
         }
 
-
+        private void ChangeWindowColorState(bool busy)
+        {
+            if (busy)
+                this.BackColor = Color.IndianRed;
+            else
+                this.BackColor = SystemColors.Control;
+        }
         private void reloadBtn_Click(object sender, EventArgs e) //Кнопка очистки формы
         {
             var newLogo = new PictureBox();
@@ -471,7 +475,6 @@ namespace LoreCollector
                 openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
-
                 if (openFileDialog.ShowDialog() == DialogResult.OK) // Если в окне выбора файла нажали ОК, то
                 {
                     filePath = openFileDialog.FileName;
@@ -496,6 +499,7 @@ namespace LoreCollector
         {
             if (connectionInfo == null)
                 return;
+            ChangeWindowColorState(true);
             using (var sftp = new SftpClient(connectionInfo))
             {
                 try
@@ -510,8 +514,10 @@ namespace LoreCollector
                 {
                     Console.WriteLine("An exception has been caught " + e.ToString());
                     MessageBox.Show("Ошибка при подключении по SFTP протоколу.");
+                    ChangeWindowColorState(false);
                 }
             }
+            ChangeWindowColorState(false);
         }
         private void DownloadDirectory(SftpClient client, string source, string destination, bool recursive = false)
         {
@@ -691,9 +697,7 @@ namespace LoreCollector
                 }
             }
         }
-
-     
-    }
+ }
 }
     
 

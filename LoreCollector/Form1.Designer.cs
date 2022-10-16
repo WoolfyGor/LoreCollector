@@ -169,14 +169,14 @@ namespace LoreCollector
             // обычныйсинийToolStripMenuItem
             // 
             this.обычныйсинийToolStripMenuItem.Name = "обычныйсинийToolStripMenuItem";
-            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.обычныйсинийToolStripMenuItem.Text = "Обычный (синий)";
             this.обычныйсинийToolStripMenuItem.Click += new System.EventHandler(this.MainStyleToolStripMenuItem_Click);
             // 
             // ваншотToolStripMenuItem
             // 
             this.ваншотToolStripMenuItem.Name = "ваншотToolStripMenuItem";
-            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ваншотToolStripMenuItem.Text = "Ваншот";
             this.ваншотToolStripMenuItem.Click += new System.EventHandler(this.OneShotToolStripMenuItem_Click);
             // 
