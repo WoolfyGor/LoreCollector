@@ -33,6 +33,7 @@ namespace LoreCollector
         string endLogsPath = "loreEnd";
         PictureBox currentLogo;
         Control LogoPos = new Control();
+        string OpenedFileName;
         
         public Form1()
         {
@@ -144,6 +145,9 @@ namespace LoreCollector
 
                     loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
                     FillThePanel(loreParsed); // Заполнение панелек с текстом, используя массив строк без мусора
+                    OpenedFileName = openFileDialog.FileName;
+                    OpenedFileName = OpenedFileName.Substring(OpenedFileName.LastIndexOf('-')-2,5);
+                    Console.WriteLine(OpenedFileName);
                 }
 
             }
@@ -406,6 +410,11 @@ namespace LoreCollector
             SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
             sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
             ChangeWindowColorState(true);
+            var directoryName = OpenedFileName.Substring(OpenedFileName.IndexOf("-")+1)+"."+OpenedFileName.Substring(0,2);
+            if(!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName)))
+                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName));
+            Console.WriteLine(directoryName);
+            sf.InitialDirectory= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName);
             sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
             var path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
             if (path == "") //Если путь пустой - прекращаем работу функции
@@ -679,7 +688,6 @@ namespace LoreCollector
                 {
                     // build sample data with 1200 Strings
                     string[] items = lines;
-                    // split on groups with each 100 items
                     String[][] chunks = items
                                         .Select((s, i) => new { Value = s, Index = i })
                                         .GroupBy(x => x.Index / 2500)
@@ -687,11 +695,8 @@ namespace LoreCollector
                                         .ToArray();
                     for (int i = 0; i < chunks.Length; i++)
                     {
-                        string newFileName = fileName.Substring(0, fileName.Length - 4) + "-" + i + ".txt";
-
+                        string newFileName = fileName.Substring(0, fileName.Length - 4) + "_" + i + ".txt";
                         System.IO.File.WriteAllLines(newFileName, chunks[i]);
-                       
-                           
                     }
 
                 }
