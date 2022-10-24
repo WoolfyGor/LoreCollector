@@ -680,7 +680,7 @@ namespace LoreCollector
             foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
             {
                 var lines = File.ReadAllLines(fileName);
-                if (lines.Length < 2500)
+                if (lines.Length < 1500)
                 {
                     continue;
                 }
@@ -690,7 +690,7 @@ namespace LoreCollector
                     string[] items = lines;
                     String[][] chunks = items
                                         .Select((s, i) => new { Value = s, Index = i })
-                                        .GroupBy(x => x.Index / 2500)
+                                        .GroupBy(x => x.Index / 1500)
                                         .Select(grp => grp.Select(x => x.Value).ToArray())
                                         .ToArray();
                     for (int i = 0; i < chunks.Length; i++)
