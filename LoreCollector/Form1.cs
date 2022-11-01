@@ -561,7 +561,11 @@ namespace LoreCollector
         private void DownloadFile(SftpClient client, SftpFile file, string directory)
         {
             Console.WriteLine("Downloading {0}", file.FullName);
-
+            if (File.Exists(Path.Combine(directory, file.Name)))
+            {
+                Console.WriteLine("{0} already exist! Skipping ", file.FullName);
+                return;
+            } 
             using (Stream fileStream = File.OpenWrite(Path.Combine(directory, file.Name)))
             {
                 client.DownloadFile(file.FullName, fileStream);
@@ -608,9 +612,7 @@ namespace LoreCollector
 
         private void saveViaSftpArchives_Click(object sender, EventArgs e)
         {
-            DirectoryInfo directory = new DirectoryInfo($"{logsPath}");
-            foreach (FileInfo file in directory.GetFiles()) file.Delete();
-
+           
             GetFiles(GetConnInfo(connDataFilePath), logsPath);
         }
 
@@ -702,7 +704,14 @@ namespace LoreCollector
                 }
             }
         }
- }
+
+        private void очиститьАрхивыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DirectoryInfo directory = new DirectoryInfo($"{logsPath}");
+            foreach (FileInfo file in directory.GetFiles()) file.Delete();
+
+        }
+    }
 }
     
 

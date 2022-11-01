@@ -66,6 +66,7 @@ namespace LoreCollector
             this.label5 = new System.Windows.Forms.Label();
             this.timeSelectCheckBox = new System.Windows.Forms.CheckBox();
             this.logoPrefab = new System.Windows.Forms.PictureBox();
+            this.очиститьАрхивыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -169,14 +170,14 @@ namespace LoreCollector
             // обычныйсинийToolStripMenuItem
             // 
             this.обычныйсинийToolStripMenuItem.Name = "обычныйсинийToolStripMenuItem";
-            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.обычныйсинийToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.обычныйсинийToolStripMenuItem.Text = "Обычный (синий)";
             this.обычныйсинийToolStripMenuItem.Click += new System.EventHandler(this.MainStyleToolStripMenuItem_Click);
             // 
             // ваншотToolStripMenuItem
             // 
             this.ваншотToolStripMenuItem.Name = "ваншотToolStripMenuItem";
-            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ваншотToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.ваншотToolStripMenuItem.Text = "Ваншот";
             this.ваншотToolStripMenuItem.Click += new System.EventHandler(this.OneShotToolStripMenuItem_Click);
             // 
@@ -209,7 +210,8 @@ namespace LoreCollector
             this.saveViaSftpArchives,
             this.unzipZips,
             this.collectLogsToClear,
-            this.DivideLogs});
+            this.DivideLogs,
+            this.очиститьАрхивыToolStripMenuItem});
             this.серверToolStripMenuItem.Name = "серверToolStripMenuItem";
             this.серверToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.серверToolStripMenuItem.Text = "Сервер";
@@ -386,6 +388,13 @@ namespace LoreCollector
             this.logoPrefab.TabStop = false;
             this.logoPrefab.Visible = false;
             // 
+            // очиститьАрхивыToolStripMenuItem
+            // 
+            this.очиститьАрхивыToolStripMenuItem.Name = "очиститьАрхивыToolStripMenuItem";
+            this.очиститьАрхивыToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.очиститьАрхивыToolStripMenuItem.Text = "Очистить архивы";
+            this.очиститьАрхивыToolStripMenuItem.Click += new System.EventHandler(this.очиститьАрхивыToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -455,6 +464,7 @@ namespace LoreCollector
         private System.Windows.Forms.ToolStripMenuItem collectLogsToClear;
         private System.Windows.Forms.ToolStripMenuItem DivideLogs;
         private System.Windows.Forms.PictureBox logoPrefab;
+        private System.Windows.Forms.ToolStripMenuItem очиститьАрхивыToolStripMenuItem;
     }
 }
 
