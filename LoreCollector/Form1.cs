@@ -218,7 +218,13 @@ namespace LoreCollector
                                     if (line.Trim().Split()[0] != "*") //Если сообщение пишется черезе /me
                                     {
                                         int Place = line.Trim().IndexOf(" ");
-                                        line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : "); // Заменяется символ пробела и ставится : для сообщения в итогового
+                                        try {
+                                            line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : ");
+                                        }// Заменяется символ пробела и ставится : для сообщения в итогового
+                                        catch
+                                        {
+
+                                        }
                                     }
                                     coolLore.Add(line); // Добавление отформатированной строки к общему массиву строк
                                 }
