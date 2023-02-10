@@ -146,7 +146,12 @@ namespace LoreCollector
                     loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
                     FillThePanel(loreParsed); // Заполнение панелек с текстом, используя массив строк без мусора
                     OpenedFileName = openFileDialog.FileName;
+                    try { 
                     OpenedFileName = OpenedFileName.Substring(OpenedFileName.LastIndexOf('-')-2,5);
+                    }
+                    catch {
+
+                    };
                     Console.WriteLine(OpenedFileName);
                 }
 
@@ -196,42 +201,12 @@ namespace LoreCollector
                         continue;
 
                 }
-                if (line.Contains("[Not")) //Поиск серверного сообщения [Not Secure], им помечаются сообщения игроков.
-                {
-                    int pos = line.IndexOf("re]") + 3; // Оффсет на конец сообщения [Not Secure]
-
-                    if (line.Contains("<") || line.Contains("*")) // СОобщения с ником или звездочкой в дейсвтии
-                    {
-                        if (!line.Substring(pos).Contains("> (")) // Обходи сообщений оффтопа
-                        {
-                            if (!line.Substring(pos).Contains("> 9")) // И ещё
-                            {
-                                if (!line.Substring(pos).Contains("> )")) // И ещё
-                                {
-
-                                    var needles = new string[] { "<", "#", ">" }; // Массив символов, которые нужно убрать из конечного сообщения
-                                    foreach (var needle in needles)
-                                    {
-                                        line = line.Replace(needle, String.Empty); // Если на строке происходит совпадение с одной из needlе (элемент массива), то заменяется на пустоту.
-                                    }
-                                    line = line.Substring(pos); // Обрезается сообщение к Никнейму
-                                    if (line.Trim().Split()[0] != "*") //Если сообщение пишется черезе /me
-                                    {
-                                        int Place = line.Trim().IndexOf(" ");
-                                        try {
-                                            line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : ");
-                                        }// Заменяется символ пробела и ставится : для сообщения в итогового
-                                        catch
-                                        {
-
-                                        }
-                                    }
-                                    coolLore.Add(line); // Добавление отформатированной строки к общему массиву строк
-                                }
-                            }
-                        }
-                    }
-                }
+                coolLore.Add(line); // Добавление отформатированной строки к общему массиву строк
+                                
+                            
+                        
+                    
+                
             }
             return coolLore; //Возвращение крутых строк 
 
@@ -246,9 +221,11 @@ namespace LoreCollector
                 SetupDialogBubble(width, line); // Для каждой строки крутого лора (отформатированные строки) создается текстовое окно
             }
 
-            mainPanel.Height = lastY + spacing * 3; // Выставляется ширина панели по Y последнего сообщения + оффсет
+            flowLayoutPanel1.Width = currentLogo.Width;
+            mainPanel.Height = flowLayoutPanel1.Height; // Выставляется ширина панели по Y последнего сообщения + оффсет
             this.AutoScroll = true; // Разрашает прокрутку основной формы
         }
+
         private void SetupDialogBubble(int width, string line)
         {
             string name = GetName(line);
@@ -260,7 +237,14 @@ namespace LoreCollector
             if (image == null)
                 return;
             prevLine = line; // Сохраняем предыдущую строку для проверки оффсета
-            mainPanel.Controls.Add(newPanel); //Добавляем созданную панель внутрь основной панели
+            Panel outerPanel = new Panel();
+            outerPanel.Controls.Add(newPanel);
+            outerPanel.Width = mainPanel.Width;
+            outerPanel.Height = newPanel.Height;
+            newPanel.Left = (outerPanel.Width - newPanel.Width) / 2;
+            newPanel.Top = (outerPanel.Height - newPanel.Height) / 2;
+            flowLayoutPanel1.Controls.Add(outerPanel); //Добавляем созданную панель внутрь основной панели
+
         }
         private Panel SetupPanel(int width, int lastY, int spacing)
         {
@@ -454,11 +438,11 @@ namespace LoreCollector
             newLogo.Size = logoPrefab.Size;
             newLogo.Location = LogoPos.Location;
             newLogo.BackgroundImageLayout = logoPrefab.BackgroundImageLayout;
-            mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newLogo);
+            flowLayoutPanel1.Controls.Clear();
+            flowLayoutPanel1.Controls.Add(newLogo);
             currentLogo = newLogo ;
             mainPanel.Height = startHeight;
-
+            flowLayoutPanel1.Height = startHeight;
         }
         private void ResetLogo()
         {
@@ -677,7 +661,9 @@ namespace LoreCollector
                 {
                     foreach (var line in winLines)
                     {
-                        sw.WriteLine(line);
+                        string newLine = CheckOfftopicMessage(line);
+                        if (newLine != null)
+                            sw.WriteLine(newLine);
                     }
                 }
             }
@@ -688,7 +674,7 @@ namespace LoreCollector
             foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
             {
                 var lines = File.ReadAllLines(fileName);
-                if (lines.Length < 1500)
+                if (lines.Length < 400)
                 {
                     continue;
                 }
@@ -698,7 +684,7 @@ namespace LoreCollector
                     string[] items = lines;
                     String[][] chunks = items
                                         .Select((s, i) => new { Value = s, Index = i })
-                                        .GroupBy(x => x.Index / 1500)
+                                        .GroupBy(x => x.Index / 400)
                                         .Select(grp => grp.Select(x => x.Value).ToArray())
                                         .ToArray();
                     for (int i = 0; i < chunks.Length; i++)
@@ -717,6 +703,102 @@ namespace LoreCollector
             foreach (FileInfo file in directory.GetFiles()) file.Delete();
 
         }
+        private void объединитьФлудToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string nextLine = "Заглушка : Заглушка";
+
+            foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
+            {
+                Console.WriteLine($"Start parsed {fileName}");
+                List<string> newContent = new List<string>();
+                var lines = File.ReadAllLines(fileName);
+                for (int i = 0; i < lines.Length - 1; i++)
+                {
+
+                    string curName = GetName(lines[i]);
+                    string nextName = GetName(lines[i + 1]);
+
+                    if (curName == nextName)
+                    {
+                        string newLine = "";
+                        newLine += lines[i];
+                        while(nextName == curName)
+                        {
+                            newLine += ". "+lines[i + 1].Replace($"{curName} : ",String.Empty);
+
+                            i++;
+                            try { 
+                            curName = GetName(lines[i]);
+                            nextName = GetName(lines[i + 1]);
+                             }
+                            catch
+                            {
+                                Console.WriteLine($"Error on {fileName}");
+                                break;
+                            }
+                        }
+                        newContent.Add(newLine);
+                    }
+                    else
+                    {
+                        newContent.Add(lines[i]);
+                    }
+                   
+                }
+                Console.WriteLine($"Parsed successfuly {fileName}");
+                File.WriteAllLines(fileName, newContent);
+            }
+
+            
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private string CheckOfftopicMessage(string line)
+        {
+            if (line.Contains("[Not")) //Поиск серверного сообщения [Not Secure], им помечаются сообщения игроков.
+            {
+                int pos = line.IndexOf("re]") + 3; // Оффсет на конец сообщения [Not Secure]
+
+                if (line.Contains("<") || line.Contains("*")) // СОобщения с ником или звездочкой в дейсвтии
+                {
+                    if (!line.Substring(pos).Contains("> (")) // Обходи сообщений оффтопа
+                    {
+                        if (!line.Substring(pos).Contains("> 9")) // И ещё
+                        {
+                            if (!line.Substring(pos).Contains("> )")) // И ещё
+                            {
+
+                                var needles = new string[] { "<", "#", ">" }; // Массив символов, которые нужно убрать из конечного сообщения
+                                foreach (var needle in needles)
+                                {
+                                    line = line.Replace(needle, String.Empty); // Если на строке происходит совпадение с одной из needlе (элемент массива), то заменяется на пустоту.
+                                }
+                                line = line.Substring(pos); // Обрезается сообщение к Никнейму
+                                if (line.Trim().Split()[0] != "*") //Если сообщение пишется черезе /me
+                                {
+                                    int Place = line.Trim().IndexOf(" ");
+                                    try
+                                    {
+                                        line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : ");
+                                    }// Заменяется символ пробела и ставится : для сообщения в итогового
+                                    catch
+                                    {
+
+                                    }
+                                }
+                                return line; // Добавление отформатированной строки к общему массиву строк
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+      
     }
 }
     

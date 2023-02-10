@@ -33,7 +33,9 @@ namespace LoreCollector
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.ChooseFile = new System.Windows.Forms.Button();
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.startLogo = new System.Windows.Forms.PictureBox();
+            this.logoPrefab = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SaveAsImage = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -51,6 +53,8 @@ namespace LoreCollector
             this.unzipZips = new System.Windows.Forms.ToolStripMenuItem();
             this.collectLogsToClear = new System.Windows.Forms.ToolStripMenuItem();
             this.DivideLogs = new System.Windows.Forms.ToolStripMenuItem();
+            this.объединитьФлудToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.очиститьАрхивыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.charactersSelectList = new System.Windows.Forms.CheckedListBox();
             this.hoursComboBoxStart = new System.Windows.Forms.ComboBox();
             this.minutesComboBoxStart = new System.Windows.Forms.ComboBox();
@@ -65,13 +69,12 @@ namespace LoreCollector
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.timeSelectCheckBox = new System.Windows.Forms.CheckBox();
-            this.logoPrefab = new System.Windows.Forms.PictureBox();
-            this.очиститьАрхивыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainPanel.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.timeSelectPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -92,22 +95,45 @@ namespace LoreCollector
             // 
             this.mainPanel.BackColor = System.Drawing.SystemColors.ControlDark;
             this.mainPanel.BackgroundImage = global::LoreCollector.Properties.Resources.background2;
-            this.mainPanel.Controls.Add(this.startLogo);
+            this.mainPanel.Controls.Add(this.flowLayoutPanel1);
             this.mainPanel.Location = new System.Drawing.Point(69, 48);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(700, 300);
+            this.mainPanel.Size = new System.Drawing.Size(614, 320);
             this.mainPanel.TabIndex = 1;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel1.Controls.Add(this.startLogo);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(614, 96);
+            this.flowLayoutPanel1.TabIndex = 8;
             // 
             // startLogo
             // 
             this.startLogo.BackColor = System.Drawing.Color.Transparent;
             this.startLogo.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
             this.startLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.startLogo.Location = new System.Drawing.Point(35, 18);
+            this.startLogo.Location = new System.Drawing.Point(3, 3);
             this.startLogo.Name = "startLogo";
-            this.startLogo.Size = new System.Drawing.Size(616, 90);
+            this.startLogo.Size = new System.Drawing.Size(608, 90);
             this.startLogo.TabIndex = 7;
             this.startLogo.TabStop = false;
+            // 
+            // logoPrefab
+            // 
+            this.logoPrefab.BackColor = System.Drawing.Color.Transparent;
+            this.logoPrefab.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
+            this.logoPrefab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.logoPrefab.Location = new System.Drawing.Point(104, 461);
+            this.logoPrefab.Name = "logoPrefab";
+            this.logoPrefab.Size = new System.Drawing.Size(616, 90);
+            this.logoPrefab.TabIndex = 7;
+            this.logoPrefab.TabStop = false;
+            this.logoPrefab.Visible = false;
             // 
             // SaveAsImage
             // 
@@ -211,6 +237,7 @@ namespace LoreCollector
             this.unzipZips,
             this.collectLogsToClear,
             this.DivideLogs,
+            this.объединитьФлудToolStripMenuItem,
             this.очиститьАрхивыToolStripMenuItem});
             this.серверToolStripMenuItem.Name = "серверToolStripMenuItem";
             this.серверToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
@@ -243,6 +270,20 @@ namespace LoreCollector
             this.DivideLogs.Size = new System.Drawing.Size(253, 22);
             this.DivideLogs.Text = "Разбить избыточные логи";
             this.DivideLogs.Click += new System.EventHandler(this.DivideLogs_Click);
+            // 
+            // объединитьФлудToolStripMenuItem
+            // 
+            this.объединитьФлудToolStripMenuItem.Name = "объединитьФлудToolStripMenuItem";
+            this.объединитьФлудToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.объединитьФлудToolStripMenuItem.Text = "Объединить флуд";
+            this.объединитьФлудToolStripMenuItem.Click += new System.EventHandler(this.объединитьФлудToolStripMenuItem_Click);
+            // 
+            // очиститьАрхивыToolStripMenuItem
+            // 
+            this.очиститьАрхивыToolStripMenuItem.Name = "очиститьАрхивыToolStripMenuItem";
+            this.очиститьАрхивыToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.очиститьАрхивыToolStripMenuItem.Text = "Очистить архивы";
+            this.очиститьАрхивыToolStripMenuItem.Click += new System.EventHandler(this.очиститьАрхивыToolStripMenuItem_Click);
             // 
             // charactersSelectList
             // 
@@ -376,25 +417,6 @@ namespace LoreCollector
             this.timeSelectCheckBox.UseVisualStyleBackColor = true;
             this.timeSelectCheckBox.CheckedChanged += new System.EventHandler(this.timeSelectCheckBox_CheckedChanged);
             // 
-            // logoPrefab
-            // 
-            this.logoPrefab.BackColor = System.Drawing.Color.Transparent;
-            this.logoPrefab.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
-            this.logoPrefab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.logoPrefab.Location = new System.Drawing.Point(104, 393);
-            this.logoPrefab.Name = "logoPrefab";
-            this.logoPrefab.Size = new System.Drawing.Size(616, 90);
-            this.logoPrefab.TabIndex = 7;
-            this.logoPrefab.TabStop = false;
-            this.logoPrefab.Visible = false;
-            // 
-            // очиститьАрхивыToolStripMenuItem
-            // 
-            this.очиститьАрхивыToolStripMenuItem.Name = "очиститьАрхивыToolStripMenuItem";
-            this.очиститьАрхивыToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
-            this.очиститьАрхивыToolStripMenuItem.Text = "Очистить архивы";
-            this.очиститьАрхивыToolStripMenuItem.Click += new System.EventHandler(this.очиститьАрхивыToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -414,13 +436,16 @@ namespace LoreCollector
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Lore Collector";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.mainPanel.ResumeLayout(false);
+            this.mainPanel.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.timeSelectPanel.ResumeLayout(false);
             this.timeSelectPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -465,6 +490,8 @@ namespace LoreCollector
         private System.Windows.Forms.ToolStripMenuItem DivideLogs;
         private System.Windows.Forms.PictureBox logoPrefab;
         private System.Windows.Forms.ToolStripMenuItem очиститьАрхивыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem объединитьФлудToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
 
