@@ -11,6 +11,13 @@ using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using File = System.IO.File;
 using System.IO.Compression;
+using System.Web;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Net;
+using System.Text;
+using System.Threading;
 
 namespace LoreCollector
 {
@@ -34,8 +41,9 @@ namespace LoreCollector
         PictureBox currentLogo;
         Control LogoPos = new Control();
         string OpenedFileName;
-        
-        public Form1()
+        int OpenedFileCount;
+        private static readonly HttpClient client = new HttpClient();
+        public Form1(bool auto = false)
         {
             InitializeComponent();
             startHeight = mainPanel.Height;
@@ -49,6 +57,8 @@ namespace LoreCollector
             CreateIfMissing(logsPath);
             CreateIfMissing($"{logsPath}/{rawLogsPath}");
             CreateIfMissing($"{logsPath}/{rawLogsPath}/{endLogsPath}");
+            if (auto)
+                StartAutoFill();
         }
         private void CreateIfMissing(string path)
         {
@@ -117,12 +127,20 @@ namespace LoreCollector
 
         private void chooseLog_Click(object sender, EventArgs e)
         {
+            LogFill();
+           
+        }
+        void LogFill(bool auto = false, string _filePath = "")
+        {
             var fileContent = string.Empty;
             var filePath = string.Empty;
             lastY = 100; // Очищение значения к исходному
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) // Сложная мешанина из интернета с считыванием файла с интернета
+            Stream fileStream;
+            if (!auto)
             {
+
+                OpenFileDialog openFileDialog = new OpenFileDialog();
                 string path = $"{logsPath}\\{rawLogsPath}\\{endLogsPath}"; // this is the path that you are checking.
                 if (Directory.Exists(path))
                 {
@@ -131,32 +149,50 @@ namespace LoreCollector
                 openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 //openFileDialog.RestoreDirectory = true;
-
                 if (openFileDialog.ShowDialog() == DialogResult.OK) // Если в окне выбора файла нажали ОК, то
                 {
                     filePath = openFileDialog.FileName;
-                    var fileStream = openFileDialog.OpenFile();
-                    using (StreamReader reader = new StreamReader(fileStream))
+                    fileStream = openFileDialog.OpenFile();
+                }
+            }
+            else
+            {
+                filePath = _filePath;
+            }
+              
+            
+                    using (StreamReader reader = new StreamReader(filePath))
                     {
                         fileContent = reader.ReadToEnd(); //Файл считывается в переменную string
                     }
                     string[] arrayString = fileContent.Split(new string[] { Environment.NewLine },
         StringSplitOptions.None); //Файл разбивается в string массив по новым строкам
-
-                    loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
+            OpenedFileName = filePath;
+            if (OpenedFileName.Contains("_"))
+            {
+                OpenedFileCount = Convert.ToInt32(OpenedFileName.Substring(OpenedFileName.IndexOf("_") + 1, 1));
+            }
+            else
+            {
+                OpenedFileCount = 1;
+            }
+            loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
                     FillThePanel(loreParsed); // Заполнение панелек с текстом, используя массив строк без мусора
-                    OpenedFileName = openFileDialog.FileName;
-                    try { 
-                    OpenedFileName = OpenedFileName.Substring(OpenedFileName.LastIndexOf('-')-2,5);
+
+          
+                    try
+                    {
+                        OpenedFileName = OpenedFileName.Substring(OpenedFileName.LastIndexOf('-') - 2, 5);
                     }
-                    catch {
+                    catch
+                    {
 
                     };
                     Console.WriteLine(OpenedFileName);
-                }
+                
 
             }
-        }
+        
         private List<string> CutToLogs(string[] fullContent)
         {
             int StartLine = 0; // Строка, с которой начинается поиск сообщений
@@ -168,7 +204,7 @@ namespace LoreCollector
             //    StartLine = i;
             //}
 
-            for (int i = StartLine + 1; i < fullContent.Length; i++)
+            for (int i = StartLine; i < fullContent.Length; i++)
             {
                 var line = fullContent[i];
                 int lineHour, lineMinute;
@@ -202,11 +238,11 @@ namespace LoreCollector
 
                 }
                 coolLore.Add(line); // Добавление отформатированной строки к общему массиву строк
-                                
-                            
-                        
-                    
-                
+
+
+
+
+
             }
             return coolLore; //Возвращение крутых строк 
 
@@ -214,7 +250,7 @@ namespace LoreCollector
 
         private void FillThePanel(List<String> completedLore)
         {
-            int width = mainPanel.Width; // Присаивание значения ширины панели для текстовых сообщений.
+            int width = flowLayoutPanel1.Width; // Присаивание значения ширины панели для текстовых сообщений.
 
             foreach (var line in completedLore)
             {
@@ -243,6 +279,7 @@ namespace LoreCollector
             outerPanel.Height = newPanel.Height;
             newPanel.Left = (outerPanel.Width - newPanel.Width) / 2;
             newPanel.Top = (outerPanel.Height - newPanel.Height) / 2;
+  
             flowLayoutPanel1.Controls.Add(outerPanel); //Добавляем созданную панель внутрь основной панели
 
         }
@@ -309,6 +346,7 @@ namespace LoreCollector
             var lineWithSpaces = SplitToLower(line, charactersToNewLine); // Разбиваем сообщение на многострчоное, используя исходную строку и кол-во символов до новой строки
             newLine.Text = lineWithSpaces; // Выставояем лейблу текст с переносами.
             newLine.Width = width; //Выставляем лейблу ширину
+           
 
             SizeF MessageSize = newLine.CreateGraphics()
                             .MeasureString(newLine.Text,
@@ -316,17 +354,19 @@ namespace LoreCollector
                                             newLine.Width,
                                             new StringFormat(0)); //Получаем то, сколько строк займет строка имея нужный шрифт, ширину контрола, размер шрифта и тп.
 
-            if (line.Length > 60) // Если ширина переданной В ФУНКЦИЮ строки больше 60, то значит он многострочный
+            if (line.Length > 40) // Если ширина переданной В ФУНКЦИЮ строки больше 60, то значит он многострочный
             {
-                float multiplier = (float)(1 + (((line.Length / 60) + 1.5) / 10));
+                float multiplier = (float)(1 + (((line.Length / 40) + 1.5) / 10));
                 newLine.Height = (int)(MessageSize.Height * multiplier); //Считаем мультипликатор и выставляем ширину строки
             }
             else
                 newLine.Height = (int)MessageSize.Height; // Иначе Ставим просто высоту строки
 
 
-            newPanel.Height = newLine.Height * 2; // Выставляем ширину ПАНЕЛИ для текста в два раза больше самого текста
+                newPanel.Height = newLine.Height * 2; // Выставляем ширину ПАНЕЛИ для текста в два раза больше самого текста
 
+
+            Console.WriteLine(newPanel.Height);
             newPanel.MinimumSize = new Size(500, 50);// Задаем минимальную ширину панели, чтобы маленькие не схлопывались
             Console.WriteLine($"Having Height at {newPanel.Height}");
             newLine.BorderStyle = BorderStyle.None; // Убираем рамки у строки
@@ -334,8 +374,8 @@ namespace LoreCollector
             newLine.ForeColor = Color.White; // Ставим цвет шрифта строке
             newLine.Location = new Point(50, (int)(newPanel.Height * 0.3)); //Позиционируем строку внутри панели
             lastY += spacing * 3 + newPanel.Height; // Увеличиваем координату последней текстовой панели на соответствующее значение
-
             InitCustomLabelFont(newLine); // Меняем шрифт строке
+
             newPanel.Controls.Add(newLine); // Добавляем строку в Панель текстового окна
 
             return newLine; //Возвращаем панельку
@@ -397,32 +437,45 @@ namespace LoreCollector
 
         private void SaveAsImage_Click(object sender, EventArgs e) //Кнопка сохранения картинки
         {
-            SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
-            sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
-            ChangeWindowColorState(true);
-            var directoryName = OpenedFileName.Substring(OpenedFileName.IndexOf("-")+1)+"."+OpenedFileName.Substring(0,2);
-            if(!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName)))
-                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName));
-            Console.WriteLine(directoryName);
-            sf.InitialDirectory= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName);
-            sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
-            var path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
-            if (path == "") //Если путь пустой - прекращаем работу функции
+            SaveLogImage();
+        }
+        void SaveLogImage(bool auto = false)
+        {
+            string path;
+            if (!auto)
             {
-                ChangeWindowColorState(false);
-                MessageBox.Show("Выберите путь и название файла.");
-                return;
+                SaveFileDialog sf = new SaveFileDialog(); //Создаем новое окно сохранения файла
+                sf.Filter = "Png Image (.png)|*.png|Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"; //Задаем перечень фильтров для сохранения
+                ChangeWindowColorState(true);
+                var directoryName = OpenedFileName.Substring(OpenedFileName.IndexOf("-") + 1) + "." + OpenedFileName.Substring(0, 2);
+                if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName)))
+                    Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName));
+                Console.WriteLine(directoryName);
+                sf.InitialDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName);
+                sf.ShowDialog(); //Отображаем окно как диалоговое (нельзя нажать никуда кроме него, пока открыто)
+                path = sf.FileName; // Получаем путь, который пользователь указал в окне в переменную
+                if (path == "") //Если путь пустой - прекращаем работу функции
+                {
+                    ChangeWindowColorState(false);
+                    MessageBox.Show("Выберите путь и название файла.");
+                    return;
+                }
             }
-
+            else
+            {
+                var directoryName = OpenedFileName.Substring(OpenedFileName.IndexOf("-") + 1) + "." + OpenedFileName.Substring(0, 2);
+                if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName)))
+                     Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName));
+                path = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName)).ToString();
+            }
             int width = mainPanel.Size.Width; //Задаем ширину основной панели в ширину будущей картинки
             int height = mainPanel.Size.Height; //Задаем ширину основной панели в ширину будущей картинки
             Bitmap bm = new Bitmap(width, height); //Создаем новый битмап заданных размеров
 
             mainPanel.DrawToBitmap(bm, new Rectangle(0, 0, width, height)); //Перерисовываем панель со всеми фонами как Битмап в нашу переменную.
-            bm.Save(path, ImageFormat.Png); //Сохраняем картинку как png по заданному пользователем ранее пути 
+            bm.Save(path+$"/{OpenedFileCount}.png", ImageFormat.Png); //Сохраняем картинку как png по заданному пользователем ранее пути 
             ChangeWindowColorState(false);
         }
-
         private void ChangeWindowColorState(bool busy)
         {
             if (busy)
@@ -432,6 +485,10 @@ namespace LoreCollector
         }
         private void reloadBtn_Click(object sender, EventArgs e) //Кнопка очистки формы
         {
+            ClearWindow();
+        }
+        void ClearWindow()
+        {
             var newLogo = new PictureBox();
             newLogo.BackColor = logoPrefab.BackColor;
             newLogo.BackgroundImage = logoPrefab.BackgroundImage;
@@ -440,7 +497,7 @@ namespace LoreCollector
             newLogo.BackgroundImageLayout = logoPrefab.BackgroundImageLayout;
             flowLayoutPanel1.Controls.Clear();
             flowLayoutPanel1.Controls.Add(newLogo);
-            currentLogo = newLogo ;
+            currentLogo = newLogo;
             mainPanel.Height = startHeight;
             flowLayoutPanel1.Height = startHeight;
         }
@@ -555,7 +612,7 @@ namespace LoreCollector
             {
                 Console.WriteLine("{0} already exist! Skipping ", file.FullName);
                 return;
-            } 
+            }
             using (Stream fileStream = File.OpenWrite(Path.Combine(directory, file.Name)))
             {
                 client.DownloadFile(file.FullName, fileStream);
@@ -563,16 +620,17 @@ namespace LoreCollector
         }
         private ConnectionInfo GetConnInfo(string dataFile)
         {
-            string host="", username="", password="", line="";
-            int port =0;
-            try { 
-            using (StreamReader reader = new StreamReader(dataFile))
+            string host = "", username = "", password = "", line = "";
+            int port = 0;
+            try
             {
-                host = reader.ReadLine();
-                username = reader.ReadLine();
-                password = reader.ReadLine();
-                int.TryParse(reader.ReadLine(), out port);
-            }
+                using (StreamReader reader = new StreamReader(dataFile))
+                {
+                    host = reader.ReadLine();
+                    username = reader.ReadLine();
+                    password = reader.ReadLine();
+                    int.TryParse(reader.ReadLine(), out port);
+                }
             }
             catch
             {
@@ -602,7 +660,7 @@ namespace LoreCollector
 
         private void saveViaSftpArchives_Click(object sender, EventArgs e)
         {
-           
+
             GetFiles(GetConnInfo(connDataFilePath), logsPath);
         }
 
@@ -694,6 +752,7 @@ namespace LoreCollector
                     }
 
                 }
+                File.Delete(fileName);
             }
         }
 
@@ -705,9 +764,8 @@ namespace LoreCollector
         }
         private void объединитьФлудToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string nextLine = "Заглушка : Заглушка";
 
-            foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
+            foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt")) 
             {
                 Console.WriteLine($"Start parsed {fileName}");
                 List<string> newContent = new List<string>();
@@ -722,15 +780,15 @@ namespace LoreCollector
                     {
                         string newLine = "";
                         newLine += lines[i];
-                        while(nextName == curName)
+                        while (nextName == curName)
                         {
-                            newLine += ". "+lines[i + 1].Replace($"{curName} : ",String.Empty);
-
+                            newLine += ". " + lines[i + 1].Replace($"{curName} : ", String.Empty);
                             i++;
-                            try { 
-                            curName = GetName(lines[i]);
-                            nextName = GetName(lines[i + 1]);
-                             }
+                            try
+                            {
+                                curName = GetName(lines[i]);
+                                nextName = GetName(lines[i + 1]);
+                            }
                             catch
                             {
                                 Console.WriteLine($"Error on {fileName}");
@@ -743,13 +801,11 @@ namespace LoreCollector
                     {
                         newContent.Add(lines[i]);
                     }
-                   
+
                 }
                 Console.WriteLine($"Parsed successfuly {fileName}");
                 File.WriteAllLines(fileName, newContent);
             }
-
-            
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -798,7 +854,21 @@ namespace LoreCollector
             return null;
         }
 
-      
+        private void серверToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            StartAutoFill(); 
+        }
+        private void StartAutoFill()
+        {
+            foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
+            {
+                LogFill(true,fileName);
+                SaveLogImage(true);
+                ClearWindow();
+                File.Delete(fileName);
+                GC.Collect();
+            }
+        }
     }
 }
     
