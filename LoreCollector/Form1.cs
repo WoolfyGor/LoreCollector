@@ -59,6 +59,9 @@ namespace LoreCollector
             CreateIfMissing($"{logsPath}/{rawLogsPath}/{endLogsPath}");
             if (auto)
                 StartAutoFill();
+
+            SelectDateToCut.Checked = true;
+            SelectDateToCut.Checked = false;
         }
         private void CreateIfMissing(string path)
         {
@@ -279,9 +282,14 @@ namespace LoreCollector
             outerPanel.Height = newPanel.Height;
             newPanel.Left = (outerPanel.Width - newPanel.Width) / 2;
             newPanel.Top = (outerPanel.Height - newPanel.Height) / 2;
-  
-            flowLayoutPanel1.Controls.Add(outerPanel); //Добавляем созданную панель внутрь основной панели
-
+            try
+            {
+                flowLayoutPanel1.Controls.Add(outerPanel); //Добавляем созданную панель внутрь основной панели
+            }
+            catch
+            {
+                StartAutoFill();
+            }
         }
         private Panel SetupPanel(int width, int lastY, int spacing)
         {
@@ -495,11 +503,36 @@ namespace LoreCollector
             newLogo.Size = logoPrefab.Size;
             newLogo.Location = LogoPos.Location;
             newLogo.BackgroundImageLayout = logoPrefab.BackgroundImageLayout;
+            try {
+            foreach(Control ctr in flowLayoutPanel1.Controls)
+                {
+                    DisposeControl(ctr);
+                }
+
             flowLayoutPanel1.Controls.Clear();
+                
             flowLayoutPanel1.Controls.Add(newLogo);
             currentLogo = newLogo;
             mainPanel.Height = startHeight;
             flowLayoutPanel1.Height = startHeight;
+            }
+            catch
+            {
+                StartAutoFill();
+            }
+        }
+        void DisposeControl(Control ctrl)
+        {
+            if (ctrl.Controls.Count > 0)
+            {
+                foreach (Control val in ctrl.Controls)
+                {
+                    DisposeControl(val);
+                }
+
+            }
+            ctrl.Dispose();
+
         }
         private void ResetLogo()
         {
@@ -860,14 +893,44 @@ namespace LoreCollector
         }
         private void StartAutoFill()
         {
+            DateTime myDt = new DateTime();
+            if (SelectDateToCut.Checked)
+            {
+                myDt = DateFrom.Value.Date;
+            }
+
+            ClearWindow();
             foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
             {
+                DateTime logDate = new DateTime();
+                DateTime NullDateTime = new DateTime();
+                if (SelectDateToCut.Checked)
+                {
+                    int indexDate = fileName.IndexOf("\\") + 1;
+                    string Years = fileName.Substring(indexDate, 4);
+                    string Months = fileName.Substring(indexDate + 5, 2);
+                    string days = fileName.Substring(indexDate + 8, 2);
+                    logDate = NullDateTime.AddYears(Convert.ToInt32(Years)-1).AddMonths(Convert.ToInt32(Months)-1).AddDays(Convert.ToInt32(days)-1);
+                }
+
+                if(!SelectDateToCut.Checked || logDate>=myDt) { 
                 LogFill(true,fileName);
                 SaveLogImage(true);
                 ClearWindow();
                 File.Delete(fileName);
                 GC.Collect();
+                }
+                else
+                {
+                    continue;
+                }
             }
+           
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            datePanel.Enabled = SelectDateToCut.Checked;
         }
     }
 }

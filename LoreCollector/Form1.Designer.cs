@@ -55,6 +55,8 @@ namespace LoreCollector
             this.DivideLogs = new System.Windows.Forms.ToolStripMenuItem();
             this.объединитьФлудToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.очиститьАрхивыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.тестToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.серверToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.charactersSelectList = new System.Windows.Forms.CheckedListBox();
             this.hoursComboBoxStart = new System.Windows.Forms.ComboBox();
             this.minutesComboBoxStart = new System.Windows.Forms.ComboBox();
@@ -69,12 +71,18 @@ namespace LoreCollector
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.timeSelectCheckBox = new System.Windows.Forms.CheckBox();
+            this.datePanel = new System.Windows.Forms.Panel();
+            this.CutToDate = new System.Windows.Forms.CheckBox();
+            this.DateFrom = new System.Windows.Forms.DateTimePicker();
+            this.DateTo = new System.Windows.Forms.DateTimePicker();
+            this.SelectDateToCut = new System.Windows.Forms.CheckBox();
             this.mainPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPrefab)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.timeSelectPanel.SuspendLayout();
+            this.datePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -128,7 +136,7 @@ namespace LoreCollector
             this.logoPrefab.BackColor = System.Drawing.Color.Transparent;
             this.logoPrefab.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
             this.logoPrefab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.logoPrefab.Location = new System.Drawing.Point(104, 461);
+            this.logoPrefab.Location = new System.Drawing.Point(87, 451);
             this.logoPrefab.Name = "logoPrefab";
             this.logoPrefab.Size = new System.Drawing.Size(616, 90);
             this.logoPrefab.TabIndex = 7;
@@ -177,7 +185,8 @@ namespace LoreCollector
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.стилиToolStripMenuItem,
             this.логоToolStripMenuItem,
-            this.серверToolStripMenuItem});
+            this.серверToolStripMenuItem,
+            this.тестToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1058, 24);
@@ -285,6 +294,21 @@ namespace LoreCollector
             this.очиститьАрхивыToolStripMenuItem.Text = "Очистить архивы";
             this.очиститьАрхивыToolStripMenuItem.Click += new System.EventHandler(this.очиститьАрхивыToolStripMenuItem_Click);
             // 
+            // тестToolStripMenuItem
+            // 
+            this.тестToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.серверToolStripMenuItem1});
+            this.тестToolStripMenuItem.Name = "тестToolStripMenuItem";
+            this.тестToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.тестToolStripMenuItem.Text = "Тест";
+            // 
+            // серверToolStripMenuItem1
+            // 
+            this.серверToolStripMenuItem1.Name = "серверToolStripMenuItem1";
+            this.серверToolStripMenuItem1.Size = new System.Drawing.Size(114, 22);
+            this.серверToolStripMenuItem1.Text = "Сервер";
+            this.серверToolStripMenuItem1.Click += new System.EventHandler(this.серверToolStripMenuItem1_Click);
+            // 
             // charactersSelectList
             // 
             this.charactersSelectList.FormattingEnabled = true;
@@ -373,7 +397,7 @@ namespace LoreCollector
             this.timeSelectPanel.Controls.Add(this.label1);
             this.timeSelectPanel.Controls.Add(this.minutesComboBoxEnd);
             this.timeSelectPanel.Controls.Add(this.hoursComboBoxEnd);
-            this.timeSelectPanel.Location = new System.Drawing.Point(824, 322);
+            this.timeSelectPanel.Location = new System.Drawing.Point(848, 563);
             this.timeSelectPanel.Name = "timeSelectPanel";
             this.timeSelectPanel.Size = new System.Drawing.Size(188, 100);
             this.timeSelectPanel.TabIndex = 12;
@@ -409,7 +433,7 @@ namespace LoreCollector
             // 
             this.timeSelectCheckBox.AutoSize = true;
             this.timeSelectCheckBox.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.timeSelectCheckBox.Location = new System.Drawing.Point(824, 300);
+            this.timeSelectCheckBox.Location = new System.Drawing.Point(834, 541);
             this.timeSelectCheckBox.Name = "timeSelectCheckBox";
             this.timeSelectCheckBox.Size = new System.Drawing.Size(212, 16);
             this.timeSelectCheckBox.TabIndex = 13;
@@ -417,11 +441,58 @@ namespace LoreCollector
             this.timeSelectCheckBox.UseVisualStyleBackColor = true;
             this.timeSelectCheckBox.CheckedChanged += new System.EventHandler(this.timeSelectCheckBox_CheckedChanged);
             // 
+            // datePanel
+            // 
+            this.datePanel.Controls.Add(this.CutToDate);
+            this.datePanel.Controls.Add(this.DateFrom);
+            this.datePanel.Controls.Add(this.DateTo);
+            this.datePanel.Location = new System.Drawing.Point(834, 322);
+            this.datePanel.Name = "datePanel";
+            this.datePanel.Size = new System.Drawing.Size(200, 100);
+            this.datePanel.TabIndex = 14;
+            // 
+            // CutToDate
+            // 
+            this.CutToDate.AutoSize = true;
+            this.CutToDate.Location = new System.Drawing.Point(1, 38);
+            this.CutToDate.Name = "CutToDate";
+            this.CutToDate.Size = new System.Drawing.Size(119, 19);
+            this.CutToDate.TabIndex = 15;
+            this.CutToDate.Text = "Нарезать по дату";
+            this.CutToDate.UseVisualStyleBackColor = true;
+            // 
+            // DateFrom
+            // 
+            this.DateFrom.Location = new System.Drawing.Point(3, 9);
+            this.DateFrom.Name = "DateFrom";
+            this.DateFrom.Size = new System.Drawing.Size(187, 23);
+            this.DateFrom.TabIndex = 0;
+            // 
+            // DateTo
+            // 
+            this.DateTo.Location = new System.Drawing.Point(3, 63);
+            this.DateTo.Name = "DateTo";
+            this.DateTo.Size = new System.Drawing.Size(187, 23);
+            this.DateTo.TabIndex = 0;
+            // 
+            // SelectDateToCut
+            // 
+            this.SelectDateToCut.AutoSize = true;
+            this.SelectDateToCut.Location = new System.Drawing.Point(834, 300);
+            this.SelectDateToCut.Name = "SelectDateToCut";
+            this.SelectDateToCut.Size = new System.Drawing.Size(114, 19);
+            this.SelectDateToCut.TabIndex = 15;
+            this.SelectDateToCut.Text = "Нарезать с даты";
+            this.SelectDateToCut.UseVisualStyleBackColor = true;
+            this.SelectDateToCut.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 1061);
+            this.Controls.Add(this.SelectDateToCut);
+            this.Controls.Add(this.datePanel);
             this.Controls.Add(this.logoPrefab);
             this.Controls.Add(this.timeSelectCheckBox);
             this.Controls.Add(this.timeSelectPanel);
@@ -446,6 +517,8 @@ namespace LoreCollector
             this.menuStrip1.PerformLayout();
             this.timeSelectPanel.ResumeLayout(false);
             this.timeSelectPanel.PerformLayout();
+            this.datePanel.ResumeLayout(false);
+            this.datePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -492,6 +565,13 @@ namespace LoreCollector
         private System.Windows.Forms.ToolStripMenuItem очиститьАрхивыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem объединитьФлудToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ToolStripMenuItem тестToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem серверToolStripMenuItem1;
+        private System.Windows.Forms.Panel datePanel;
+        private System.Windows.Forms.CheckBox CutToDate;
+        private System.Windows.Forms.DateTimePicker DateFrom;
+        private System.Windows.Forms.DateTimePicker DateTo;
+        private System.Windows.Forms.CheckBox SelectDateToCut;
     }
 }
 
