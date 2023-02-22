@@ -76,6 +76,8 @@ namespace LoreCollector
             this.DateFrom = new System.Windows.Forms.DateTimePicker();
             this.DateTo = new System.Windows.Forms.DateTimePicker();
             this.SelectDateToCut = new System.Windows.Forms.CheckBox();
+            this.староеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.автоматонToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.startLogo)).BeginInit();
@@ -136,12 +138,13 @@ namespace LoreCollector
             this.logoPrefab.BackColor = System.Drawing.Color.Transparent;
             this.logoPrefab.BackgroundImage = global::LoreCollector.Properties.Resources.DiemensionSMP;
             this.logoPrefab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.logoPrefab.Location = new System.Drawing.Point(87, 451);
+            this.logoPrefab.Location = new System.Drawing.Point(87, 519);
             this.logoPrefab.Name = "logoPrefab";
             this.logoPrefab.Size = new System.Drawing.Size(616, 90);
             this.logoPrefab.TabIndex = 7;
             this.logoPrefab.TabStop = false;
             this.logoPrefab.Visible = false;
+            this.logoPrefab.Click += new System.EventHandler(this.logoPrefab_Click);
             // 
             // SaveAsImage
             // 
@@ -242,12 +245,14 @@ namespace LoreCollector
             // серверToolStripMenuItem
             // 
             this.серверToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.автоматонToolStripMenuItem,
             this.saveViaSftpArchives,
             this.unzipZips,
             this.collectLogsToClear,
             this.DivideLogs,
             this.объединитьФлудToolStripMenuItem,
-            this.очиститьАрхивыToolStripMenuItem});
+            this.очиститьАрхивыToolStripMenuItem,
+            this.староеToolStripMenuItem});
             this.серверToolStripMenuItem.Name = "серверToolStripMenuItem";
             this.серверToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.серверToolStripMenuItem.Text = "Сервер";
@@ -486,6 +491,19 @@ namespace LoreCollector
             this.SelectDateToCut.UseVisualStyleBackColor = true;
             this.SelectDateToCut.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // староеToolStripMenuItem
+            // 
+            this.староеToolStripMenuItem.Name = "староеToolStripMenuItem";
+            this.староеToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.староеToolStripMenuItem.Text = "Старое";
+            // 
+            // автоматонToolStripMenuItem
+            // 
+            this.автоматонToolStripMenuItem.Name = "автоматонToolStripMenuItem";
+            this.автоматонToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.автоматонToolStripMenuItem.Text = "Автоматон";
+            this.автоматонToolStripMenuItem.Click += new System.EventHandler(this.автоматонToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -572,6 +590,8 @@ namespace LoreCollector
         private System.Windows.Forms.DateTimePicker DateFrom;
         private System.Windows.Forms.DateTimePicker DateTo;
         private System.Windows.Forms.CheckBox SelectDateToCut;
+        private System.Windows.Forms.ToolStripMenuItem автоматонToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem староеToolStripMenuItem;
     }
 }
 

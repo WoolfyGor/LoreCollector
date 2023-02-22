@@ -18,6 +18,10 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
+using Image = System.Drawing.Image;
+using System.Reflection.Emit;
+using Label = System.Windows.Forms.Label;
 
 namespace LoreCollector
 {
@@ -162,12 +166,17 @@ namespace LoreCollector
             {
                 filePath = _filePath;
             }
-              
+            try { 
             
                     using (StreamReader reader = new StreamReader(filePath))
                     {
                         fileContent = reader.ReadToEnd(); //Файл считывается в переменную string
                     }
+            }
+            catch
+            {
+
+            }
                     string[] arrayString = fileContent.Split(new string[] { Environment.NewLine },
         StringSplitOptions.None); //Файл разбивается в string массив по новым строкам
             OpenedFileName = filePath;
@@ -181,8 +190,6 @@ namespace LoreCollector
             }
             loreParsed = CutToLogs(arrayString); // Присвоение отсортированного лора (без мусора) в глобальную переменную.
                     FillThePanel(loreParsed); // Заполнение панелек с текстом, используя массив строк без мусора
-
-          
                     try
                     {
                         OpenedFileName = OpenedFileName.Substring(OpenedFileName.LastIndexOf('-') - 2, 5);
@@ -312,6 +319,7 @@ namespace LoreCollector
                 Console.WriteLine($"Panel location.Y is {newPanel.Location.Y} at spacing having {spacing} having LastY {lastY}");
             }
 
+            
             return newPanel; // Возвращаем панель
         }
         private PictureBox SetupImage(Panel newPanel, Label newLine, string line)
@@ -319,7 +327,13 @@ namespace LoreCollector
             PictureBox newPicture = new PictureBox(); //Создается картинка
             newPicture.Size = new Size(25, 25); //Выставляется размер картинки
             newPicture.SizeMode = PictureBoxSizeMode.Zoom; // Выставляется режим масштабирования картинки
-            newPicture.Location = new Point(15, (int)(newLine.Height / 1.5)); //Выставляется позиция картинки относительно текстового поля
+                                                           //newPicture.Location = new Point(15, (int)(newLine.Height / 1.5)); //Выставляется позиция картинки относительно текстового поля
+
+
+
+            newPicture.Left = 15;
+            newPicture.Top = newPanel.Height / 2 - newPicture.Height / 2;
+
             newPanel.Controls.Add(newPicture); //На панель добавляется картинка
             string name = GetName(line);
 
@@ -354,38 +368,25 @@ namespace LoreCollector
             var lineWithSpaces = SplitToLower(line, charactersToNewLine); // Разбиваем сообщение на многострчоное, используя исходную строку и кол-во символов до новой строки
             newLine.Text = lineWithSpaces; // Выставояем лейблу текст с переносами.
             newLine.Width = width; //Выставляем лейблу ширину
-           
+            InitCustomLabelFont(newLine); // Меняем шрифт строке
+            newPanel.MinimumSize = new Size(600, 50);// Задаем минимальную ширину панели, чтобы маленькие не схлопывались
+            Size maxSize = new Size(495, int.MaxValue);
+            newLine.Height = TextRenderer.MeasureText(newLine.Text, newLine.Font, maxSize).Height;
 
-            SizeF MessageSize = newLine.CreateGraphics()
-                            .MeasureString(newLine.Text,
-                                            newLine.Font,
-                                            newLine.Width,
-                                            new StringFormat(0)); //Получаем то, сколько строк займет строка имея нужный шрифт, ширину контрола, размер шрифта и тп.
-
-            if (line.Length > 40) // Если ширина переданной В ФУНКЦИЮ строки больше 60, то значит он многострочный
-            {
-                float multiplier = (float)(1 + (((line.Length / 40) + 1.5) / 10));
-                newLine.Height = (int)(MessageSize.Height * multiplier); //Считаем мультипликатор и выставляем ширину строки
-            }
-            else
-                newLine.Height = (int)MessageSize.Height; // Иначе Ставим просто высоту строки
-
-
-                newPanel.Height = newLine.Height * 2; // Выставляем ширину ПАНЕЛИ для текста в два раза больше самого текста
-
-
-            Console.WriteLine(newPanel.Height);
-            newPanel.MinimumSize = new Size(500, 50);// Задаем минимальную ширину панели, чтобы маленькие не схлопывались
-            Console.WriteLine($"Having Height at {newPanel.Height}");
+            //newLine.BackColor = Color.Black;
+            
+          
+         
+            Console.WriteLine($"Having line Height at {newLine.Height}");
             newLine.BorderStyle = BorderStyle.None; // Убираем рамки у строки
             newLine.BackColor = Color.Transparent; // Ставим прозрачный фон строке
             newLine.ForeColor = Color.White; // Ставим цвет шрифта строке
-            newLine.Location = new Point(50, (int)(newPanel.Height * 0.3)); //Позиционируем строку внутри панели
-            lastY += spacing * 3 + newPanel.Height; // Увеличиваем координату последней текстовой панели на соответствующее значение
-            InitCustomLabelFont(newLine); // Меняем шрифт строке
+            newLine.Top = 20;
+            newLine.Left = 50;
 
+            newPanel.Height = newLine.Top * 2 + newLine.Height;
             newPanel.Controls.Add(newLine); // Добавляем строку в Панель текстового окна
-
+            Console.WriteLine($"Having panel Height at {newPanel.Height}");
             return newLine; //Возвращаем панельку
         }
         private PictureBox SetHeadPicture(PictureBox pictureBox, String name)
@@ -765,7 +766,7 @@ namespace LoreCollector
             foreach (string fileName in Directory.GetFiles($"{logsPath}/{rawLogsPath}/{endLogsPath}", "*.txt"))
             {
                 var lines = File.ReadAllLines(fileName);
-                if (lines.Length < 400)
+                if (lines.Length < 350)
                 {
                     continue;
                 }
@@ -775,7 +776,7 @@ namespace LoreCollector
                     string[] items = lines;
                     String[][] chunks = items
                                         .Select((s, i) => new { Value = s, Index = i })
-                                        .GroupBy(x => x.Index / 400)
+                                        .GroupBy(x => x.Index / 350)
                                         .Select(grp => grp.Select(x => x.Value).ToArray())
                                         .ToArray();
                     for (int i = 0; i < chunks.Length; i++)
@@ -931,6 +932,20 @@ namespace LoreCollector
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             datePanel.Enabled = SelectDateToCut.Checked;
+        }
+
+        private void logoPrefab_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void автоматонToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveViaSftpArchives_Click(null, null);
+            unzipZips_Click(null, null);
+            collectLogsToClear_Click(null, null);
+            объединитьФлудToolStripMenuItem_Click(null, null);
+            DivideLogs_Click(null, null);
         }
     }
 }
