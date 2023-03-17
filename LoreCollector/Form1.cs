@@ -335,6 +335,10 @@ namespace LoreCollector
             newPicture.Top = newPanel.Height / 2 - newPicture.Height / 2;
 
             newPanel.Controls.Add(newPicture); //На панель добавляется картинка
+            if (line.Contains("Сильванни"))
+            {
+
+            }
             string name = GetName(line);
 
 
@@ -353,14 +357,43 @@ namespace LoreCollector
         string GetName(string line)
         {
             string name;
+            int Place = new int();
+
+            string localNeedle = line.Trim().StartsWith("*") ? line.Substring(3) : line;
+            foreach (var localName in nickNames)
+            {
+                if (line.Trim().StartsWith("*") && line.Contains("Херотч"))
+                {
+
+                }
+                if (localNeedle.Trim().StartsWith(localName.Value))
+                {
+                    Place = localName.Value.Length;
+                    break;
+                }
+                if (localNeedle.Trim().StartsWith(localName.Key))
+                {
+                    Place = localName.Key.Length;
+                    break;
+                }
+            }
 
             if (line.Trim().Substring(0, 3).Contains("*"))
             {
-                name = line.Trim().Substring(2, line.Trim().IndexOf(" ", 3) - 2); //Если сообщение пишется через /me (имеет звездочку вначале), то отрабатывает обрезание ника по одной последовательности
+                if(line.Contains("Херотч Сильванни"))
+                {
+
+                }
+                name = line.Trim().Substring(2, Place); //Если сообщение пишется через /me (имеет звездочку вначале), то отрабатывает обрезание ника по одной последовательности
+              
             }
-            else
-                name = line.Trim().Substring(0, line.IndexOf(" ")); // Если сообщение обычное, то по другой 
-            return name;
+            else {
+             
+                    name = line.Trim().Substring(0, Place); // Если сообщение обычное, то по другой
+
+               
+                }
+                return name;
         }
         private Label SetupLabel(int width, string line, float charactersToNewLine, Panel newPanel)
         {
@@ -412,7 +445,7 @@ namespace LoreCollector
                 pictureBox.Image = Properties.Resources.steave_head; //Также, если ника нет в списке имен@ников, ставится стив
 
             if (name == "Root_Of_Tree") //Костыль на ник Рут, потому что он не читался из файла корректно
-                pictureBox.Image = imageList1.Images[imageList1.Images.IndexOfKey(folderName + "\\" + "Рут" + ".png")];
+                pictureBox.Image = imageList1.Images[imageList1.Images.IndexOfKey(folderName + "\\" + "Рут Сильванни" + ".png")];
 
             return pictureBox; // Возвращаем картинку
         }
@@ -747,19 +780,40 @@ namespace LoreCollector
                 {
                     winLines[i] = fileLines[i].Replace("\n", "\r\n");
                 }
-
+                LinkedList<string> lines = new LinkedList<string>(winLines);
+                LinkedList<string> finalLines = new LinkedList<string>();
                 string path = $"{logsPath}/{rawLogsPath}/{endLogsPath}/" + cutName + ".txt";
-                using (StreamWriter sw = File.AppendText(path))
-                {
-                    foreach (var line in winLines)
+                using (StreamWriter sw = File.AppendText(path)) {
+
+                    foreach (var line in lines)
                     {
+                        bool messageWereRemoved = false;
                         string newLine = CheckOfftopicMessage(line);
                         if (newLine != null)
-                            sw.WriteLine(newLine);
+                        {
+                            if (line.ToLower().Contains("@удалить@"))
+                            {
+                                messageWereRemoved = true;
+                                string localLineName = GetName(newLine);
+                                foreach (string localLine in finalLines.Reverse())
+                                    {
+                                 
+                                    string localnewLineName = GetName(localLine);
+                                    if (localnewLineName == localLineName)
+                                        {
+                                        finalLines.Remove(finalLines.Find(localLine));
+                                        break;
+                                        }
+                                    }
+                            }
+                            if(!messageWereRemoved)
+                                finalLines.AddLast(newLine);
+                        }
                     }
+                    foreach (string line in finalLines) sw.Write(line+"\n");
                 }
-            }
-        }
+            } }
+        
 
         private void DivideLogs_Click(object sender, EventArgs e)
         {
@@ -870,9 +924,30 @@ namespace LoreCollector
                                 if (line.Trim().Split()[0] != "*") //Если сообщение пишется черезе /me
                                 {
                                     int Place = line.Trim().IndexOf(" ");
+                                    foreach (var name in nickNames)
+                                    {
+                                        if (line.Trim().StartsWith(name.Value))
+                                        {
+                                            Place = name.Value.Length;
+                                            break;
+                                        }
+                                        if (line.Trim().StartsWith(name.Key))
+                                        {
+                                            Place = name.Key.Length ;
+                                            break;
+                                        }
+                                    }
+                                    
                                     try
                                     {
+
+                                        if (line.Contains("Херотч Сильванни "))
+                                        {
+                                            line = line.Trim().Remove(Place + "Херотч Сильванни".Length - 1, " ".Length).Insert(Place, " : ");
+                                        }
+                                        else { 
                                         line = line.Trim().Remove(Place, " ".Length).Insert(Place, " : ");
+                                        }
                                     }// Заменяется символ пробела и ставится : для сообщения в итогового
                                     catch
                                     {

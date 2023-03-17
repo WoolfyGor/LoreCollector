@@ -2,15 +2,18 @@ Pr0F@Профессор
 ViviHerMajesti@Вивиан
 GoodAugust@Аластеир
 mozhzh@Мошка
-Herotch@Херотч
+Herotch@Херотч Сильванни
+Herotch1@Херотч
 CherryKnight@Мун
 azerttyo@Хлор
 Hajumi_Dwarf@Хаджуми
 Nightmar6@Альберт
 Stzone@Рой
-Root_of_Tree@Рут
+Root_of_Tree@Рут Сильванни
+Root_of_Tree1@Рут
 Yadvig@Ядвиг
 Loga@Лога
+Loga1@Фантомы
 teoririn@Альбион
 KofiCherry01@Александра
 suspencer@Тод
@@ -21,8 +24,10 @@ Lianjin@Лиандзин
 Podardzh@Подардж
 Lin_Linlin@Лин_Линь
 AmberDeer@Эжнец
-Sofia_catmammy@София
+Sofia_catmammy@София Сильванни
+Sofia_catmammy1@София
 scarecrowcharles@Морой
+ZefireCat2@Зефирка
 ZefireCat@Сефира
 ZefireCat1@Сифира
 Ratux@Басир
@@ -30,3 +35,5 @@ Koumor1@Рани
 LittleSauli@Лазурь
 RyazhaKaslana@Лоскутница
 15c4r107@Одолень
+RyazhaKaslana1@Проблема
+bloodforus@Илай
